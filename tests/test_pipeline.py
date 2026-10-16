@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from transcription_analysis.pipeline import QCError, run_pipeline
+from transcription_analysis.visualize import _condition_plot_data
 
 
 CONDITIONS = ["a", "b", "c", "d", "e"]
@@ -160,6 +161,54 @@ def create_complete_results(
 
 
 class PipelineTests(unittest.TestCase):
+    def test_error_composition_uses_mean_response_level_rates(self):
+        scored = [
+            {
+                "condition": "a",
+                "participant_id": "p1",
+                "session_id": "s1",
+                "wer": 1.0,
+                "cer": 1.0,
+                "reference_words": 1,
+                "word_substitutions": 1,
+                "word_deletions": 0,
+                "word_insertions": 0,
+                "reference_characters": 1,
+                "character_substitutions": 1,
+                "character_deletions": 0,
+                "character_insertions": 0,
+            },
+            {
+                "condition": "a",
+                "participant_id": "p2",
+                "session_id": "s2",
+                "wer": 0.0,
+                "cer": 0.0,
+                "reference_words": 9,
+                "word_substitutions": 0,
+                "word_deletions": 0,
+                "word_insertions": 0,
+                "reference_characters": 9,
+                "character_substitutions": 0,
+                "character_deletions": 0,
+                "character_insertions": 0,
+            },
+        ]
+        rows = _condition_plot_data(
+            scored,
+            ["a"],
+            {
+                "bootstrap_samples": 1,
+                "random_seed": 1,
+                "condition_display_names": {"a": "A"},
+            },
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertAlmostEqual(rows[0]["mean_wer"], 0.5)
+        self.assertAlmostEqual(rows[0]["substitution_rate"], 0.5)
+        self.assertAlmostEqual(rows[0]["mean_cer"], 0.5)
+        self.assertAlmostEqual(rows[0]["character_substitution_rate"], 0.5)
+
     def test_complete_counterbalanced_run(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -187,12 +236,14 @@ class PipelineTests(unittest.TestCase):
             self.assertTrue((output / "06_figures" / "condition_plot_data.csv").exists())
             self.assertTrue((output / "06_figures" / "gender_condition_plot_data.csv").exists())
             self.assertTrue((output / "06_figures" / "speaker_condition_plot_data.csv").exists())
+            self.assertTrue((output / "06_figures" / "inter_listener_consistency_plot_data.csv").exists())
             self.assertTrue((output / "06_figures" / "condition_error_rates.svg").exists())
             self.assertTrue((output / "06_figures" / "gender_error_rates.svg").exists())
             self.assertTrue((output / "06_figures" / "speaker_error_rates.svg").exists())
             self.assertTrue((output / "06_figures" / "error_composition.svg").exists())
             self.assertTrue((output / "06_figures" / "xxx_rates.svg").exists())
-            self.assertEqual(len(manifest["figures"]), 5)
+            self.assertTrue((output / "06_figures" / "inter_listener_consistency.svg").exists())
+            self.assertEqual(len(manifest["figures"]), 6)
             for figure in manifest["figures"]:
                 path = output / "06_figures" / figure
                 ET.parse(path)
@@ -202,6 +253,21 @@ class PipelineTests(unittest.TestCase):
             self.assertIn("character_substitution_rate", plot_rows[0])
             self.assertIn("character_deletion_rate", plot_rows[0])
             self.assertIn("character_insertion_rate", plot_rows[0])
+            for row in plot_rows:
+                word_components = sum(
+                    float(row[field])
+                    for field in ("substitution_rate", "deletion_rate", "insertion_rate")
+                )
+                character_components = sum(
+                    float(row[field])
+                    for field in (
+                        "character_substitution_rate",
+                        "character_deletion_rate",
+                        "character_insertion_rate",
+                    )
+                )
+                self.assertAlmostEqual(word_components, float(row["mean_wer"]))
+                self.assertAlmostEqual(character_components, float(row["mean_cer"]))
             with (output / "06_figures" / "gender_condition_plot_data.csv").open(encoding="utf-8") as handle:
                 gender_plot_rows = list(csv.DictReader(handle))
             self.assertIn("condition", gender_plot_rows[0])

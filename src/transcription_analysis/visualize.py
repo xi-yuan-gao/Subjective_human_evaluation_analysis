@@ -197,26 +197,13 @@ def _condition_plot_data(
         cer, cer_low, cer_high = _listener_bootstrap_ci(
             group, "cer", samples, seed + index * 2 + 1
         )
-        reference_words = sum(
-            int(row.get("reference_words", 0) or 0) for row in group
-        )
-        reference_characters = sum(
-            int(row.get("reference_characters", 0) or 0) for row in group
-        )
-        substitutions = sum(
-            int(row.get("word_substitutions", 0) or 0) for row in group
-        )
-        deletions = sum(int(row.get("word_deletions", 0) or 0) for row in group)
-        insertions = sum(int(row.get("word_insertions", 0) or 0) for row in group)
-        character_substitutions = sum(
-            int(row.get("character_substitutions", 0) or 0) for row in group
-        )
-        character_deletions = sum(
-            int(row.get("character_deletions", 0) or 0) for row in group
-        )
-        character_insertions = sum(
-            int(row.get("character_insertions", 0) or 0) for row in group
-        )
+        def mean_component_rate(count_field: str, length_field: str) -> float:
+            rates = [
+                int(row.get(count_field, 0) or 0) / int(row.get(length_field, 0) or 0)
+                for row in group
+                if int(row.get(length_field, 0) or 0) > 0
+            ]
+            return mean(rates) if rates else 0.0
         output.append(
             {
                 "condition": condition,
@@ -230,12 +217,12 @@ def _condition_plot_data(
                 "mean_cer": cer,
                 "cer_ci_low": cer_low,
                 "cer_ci_high": cer_high,
-                "substitution_rate": substitutions / reference_words if reference_words else 0,
-                "deletion_rate": deletions / reference_words if reference_words else 0,
-                "insertion_rate": insertions / reference_words if reference_words else 0,
-                "character_substitution_rate": character_substitutions / reference_characters if reference_characters else 0,
-                "character_deletion_rate": character_deletions / reference_characters if reference_characters else 0,
-                "character_insertion_rate": character_insertions / reference_characters if reference_characters else 0,
+                "substitution_rate": mean_component_rate("word_substitutions", "reference_words"),
+                "deletion_rate": mean_component_rate("word_deletions", "reference_words"),
+                "insertion_rate": mean_component_rate("word_insertions", "reference_words"),
+                "character_substitution_rate": mean_component_rate("character_substitutions", "reference_characters"),
+                "character_deletion_rate": mean_component_rate("character_deletions", "reference_characters"),
+                "character_insertion_rate": mean_component_rate("character_insertions", "reference_characters"),
                 "xxx_response_rate": sum(
                     int(row.get("contains_xxx", 0)) for row in group
                 )
@@ -460,7 +447,7 @@ def _draw_error_composition_figure(data: list[dict[str, Any]], path: Path) -> No
         _text(
             35,
             58,
-            "Each panel shows pooled substitutions, deletions, and insertions. Lower is better.",
+            "Each panel shows mean response-level substitutions, deletions, and insertions. Lower is better.",
             size=12,
             color=GRAY,
         ),
@@ -474,8 +461,8 @@ def _draw_error_composition_figure(data: list[dict[str, Any]], path: Path) -> No
         body.append(_text(legend_x + 18, 58, label, size=11))
         legend_x += 115
     panels = [
-        (35, "Word errors rate", "Error rate", ""),
-        (710, "Character errors rate", "Error rate", "character_"),
+        (35, "Word error rate", "Error rate", ""),
+        (710, "Character error rate", "Error rate", "character_"),
     ]
     panel_width, label_width, chart_width = 635, 215, 420
     for panel_x, panel_title, axis_title, prefix in panels:
@@ -587,11 +574,150 @@ def _draw_xxx_figure(data: list[dict[str, Any]], path: Path) -> None:
     )
 
 
+def _consistency_plot_data(
+    rows: list[dict[str, Any]],
+    conditions: list[str],
+    condition_display_names: dict[str, str],
+) -> list[dict[str, Any]]:
+    """Return complete utterance-condition consistency rows in plot order."""
+    order = {condition: index for index, condition in enumerate(conditions)}
+    output: list[dict[str, Any]] = []
+    for row in rows:
+        condition = str(row.get("condition", ""))
+        complete = str(row.get("complete_listener_set", "")).lower() == "true"
+        if condition not in order or not complete:
+            continue
+        wer_sd = _number(row.get("listener_sd_wer"))
+        cer_sd = _number(row.get("listener_sd_cer"))
+        if wer_sd is None or cer_sd is None:
+            continue
+        output.append(
+            {
+                "utterance_id": row.get("utterance_id", ""),
+                "condition": condition,
+                "condition_display_name": condition_display_names.get(
+                    condition, condition
+                ),
+                "n_responses": row.get("n_responses", ""),
+                "listener_sd_wer": wer_sd,
+                "listener_sd_cer": cer_sd,
+            }
+        )
+    return sorted(
+        output,
+        key=lambda row: (order[str(row["condition"])], str(row["utterance_id"])),
+    )
+
+
+def _draw_consistency_figure(
+    data: list[dict[str, Any]],
+    path: Path,
+    conditions: list[str],
+) -> None:
+    """Draw box-and-dot distributions of within-item listener WER/CER SD."""
+    width, height = 1260, 555
+    top, bottom = 112, 66
+    panel_width = 570
+    label_width = 205
+    chart_width = panel_width - label_width
+    panels = [
+        (35, "Word error rate variation", "listener_sd_wer", BLUE),
+        (655, "Character error rate variation", "listener_sd_cer", ORANGE),
+    ]
+    present_conditions = [
+        condition
+        for condition in conditions
+        if any(str(row["condition"]) == condition for row in data)
+    ]
+    row_gap = (height - top - bottom) / max(1, len(present_conditions))
+    body = [
+        _text(35, 34, "Inter-listener consistency by condition", size=20, weight=500),
+        _text(
+            35,
+            58,
+            "Each dot is one complete utterance-condition group; boxes show the middle 50% and median. Lower variation means greater consistency.",
+            size=12,
+            color=GRAY,
+        ),
+    ]
+    for panel_x, panel_title, metric, color in panels:
+        chart_x = panel_x + label_width
+        all_values = [float(row[metric]) for row in data]
+        maximum = _nice_max(all_values, minimum=0.20)
+        body.append(_text(panel_x, 90, panel_title, size=15, weight=500))
+        for tick_index in range(5):
+            tick = maximum * tick_index / 4
+            x = chart_x + chart_width * tick / maximum
+            body.append(
+                f'<line x1="{x:.1f}" y1="{top}" x2="{x:.1f}" y2="{height-bottom}" stroke="{LIGHT_GRAY}" stroke-width="1"/>'
+            )
+            body.append(
+                _text(x, height - 38, f"{tick:.0%}", anchor="middle", size=11, color=GRAY)
+            )
+        for row_index, condition in enumerate(present_conditions):
+            group = [row for row in data if str(row["condition"]) == condition]
+            values = sorted(float(row[metric]) for row in group)
+            if not values:
+                continue
+            center_y = top + row_gap * (row_index + 0.5)
+            display_name = str(group[0]["condition_display_name"])
+            body.append(_text(panel_x, center_y + 4, display_name, size=12))
+            q1 = _quantile(values, 0.25)
+            median_value = _quantile(values, 0.50)
+            q3 = _quantile(values, 0.75)
+            iqr = q3 - q1
+            lower_candidates = [value for value in values if value >= q1 - 1.5 * iqr]
+            upper_candidates = [value for value in values if value <= q3 + 1.5 * iqr]
+            whisker_low = min(lower_candidates) if lower_candidates else min(values)
+            whisker_high = max(upper_candidates) if upper_candidates else max(values)
+            scale = lambda value: chart_x + chart_width * value / maximum
+            jitter = (-10, -5, 0, 5, 10)
+            for value_index, value in enumerate(values):
+                dot_y = center_y + jitter[value_index % len(jitter)]
+                body.append(
+                    f'<circle cx="{scale(value):.1f}" cy="{dot_y:.1f}" r="3.2" fill="{GRAY}" fill-opacity="0.48"/>'
+                )
+            body.append(
+                f'<line x1="{scale(whisker_low):.1f}" y1="{center_y:.1f}" x2="{scale(whisker_high):.1f}" y2="{center_y:.1f}" stroke="{color}" stroke-width="2"/>'
+            )
+            body.append(
+                f'<rect x="{scale(q1):.1f}" y="{center_y-12:.1f}" width="{max(1.0, scale(q3)-scale(q1)):.1f}" height="24" fill="{color}" fill-opacity="0.24" stroke="{color}" stroke-width="2"/>'
+            )
+            body.append(
+                f'<line x1="{scale(median_value):.1f}" y1="{center_y-14:.1f}" x2="{scale(median_value):.1f}" y2="{center_y+14:.1f}" stroke="{color}" stroke-width="3"/>'
+            )
+            body.append(
+                _text(
+                    chart_x + chart_width + 8,
+                    center_y + 4,
+                    f"{median_value:.1%}",
+                    size=11,
+                    weight=500,
+                    color=color,
+                )
+            )
+        body.append(
+            _text(
+                chart_x + chart_width / 2,
+                height - 12,
+                "Within-item listener SD",
+                anchor="middle",
+                size=12,
+                color=GRAY,
+            )
+        )
+    path.write_text(
+        _svg_document(width, height, "Inter-listener consistency by condition", body),
+        encoding="utf-8",
+    )
+
+
 def generate_figures(
     scored: list[dict[str, Any]],
     output_root: Path,
     expected_conditions: list[str],
     settings: dict[str, Any],
+    consistency_rows: list[dict[str, Any]] | None = None,
 ) -> list[str]:
     """Generate report-ready SVG figures and their auditable condition data."""
     if not settings.get("enabled", True):
@@ -632,6 +758,15 @@ def generate_figures(
     write_csv(output_root / "condition_plot_data.csv", condition_data)
     write_csv(output_root / "gender_condition_plot_data.csv", gender_data)
     write_csv(output_root / "speaker_condition_plot_data.csv", speaker_data)
+    consistency_data = _consistency_plot_data(
+        consistency_rows or [],
+        conditions,
+        settings.get("condition_display_names", {}),
+    )
+    write_csv(
+        output_root / "inter_listener_consistency_plot_data.csv",
+        consistency_data,
+    )
     _draw_error_rate_figure(
         condition_data,
         output_root / "condition_error_rates.svg",
@@ -656,10 +791,18 @@ def generate_figures(
     )
     _draw_error_composition_figure(condition_data, output_root / "error_composition.svg")
     _draw_xxx_figure(condition_data, output_root / "xxx_rates.svg")
-    return [
+    figures = [
         "condition_error_rates.svg",
         "gender_error_rates.svg",
         "speaker_error_rates.svg",
         "error_composition.svg",
         "xxx_rates.svg",
     ]
+    if consistency_data:
+        _draw_consistency_figure(
+            consistency_data,
+            output_root / "inter_listener_consistency.svg",
+            conditions,
+        )
+        figures.append("inter_listener_consistency.svg")
+    return figures

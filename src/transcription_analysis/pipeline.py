@@ -1162,6 +1162,7 @@ def run_pipeline(results_root: Path, output_root: Path, config: dict[str, Any]) 
         output_root / "06_figures",
         [str(condition) for condition in config.get("expected_conditions", [])],
         config.get("visualization", {}),
+        consistency_by_item,
     )
 
     manifest["status"] = "COMPLETE_WITH_EXCLUSIONS" if eligibility_errors else "COMPLETE"
