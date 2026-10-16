@@ -1,0 +1,152 @@
+{
+  "list_directory_pattern": "pilot_transcription_experiment_list{list_id}",
+  "list_ids": [1, 2, 3, 4, 5],
+  "expected_participants_per_list": 3,
+  "expected_ratings_per_utterance_condition": 3,
+  "expected_main_trials_per_participant": null,
+  "expected_attention_checks_per_participant": null,
+  "expected_conditions": [
+    "mantis_3.2",
+    "mantis_5.2_content_apt",
+    "mantis_v5_w2s_baseline_E2E_apt",
+    "spoken_audio",
+    "whisper_audio"
+  ],
+  "column_aliases": {
+    "participant_id": ["participant_id", "participant", "prolific_pid", "prolific_id"],
+    "session_id": ["session_id", "session", "study_session_id"],
+    "native_english": ["native_english", "native_english_speaker", "english_native"],
+    "headphones": ["headphones", "wearing_headphones", "used_headphones"],
+    "heard_clearly": ["heard_clearly", "audio_heard_clearly", "could_hear_clearly"],
+    "utterance_id": ["utt_id", "utterance_id", "item_id", "stimulus_id", "audio_id"],
+    "condition": ["condition", "model", "system", "audio_condition"],
+    "speaker_id": ["speaker_id", "speaker", "target_speaker"],
+    "reference_text": ["reference_text", "reference", "target_text", "ground_truth", "text"],
+    "transcription": ["transcription", "response", "typed_response", "transcript"],
+    "is_attention_check": ["is_attention_check", "attention_check", "is_attention", "check_trial"],
+    "attention_check_passed": ["attention_check_passed", "attention_passed", "check_passed", "passed"],
+    "expected_response": ["expected_response", "attention_expected_response", "expected_transcription"],
+    "trial_type": ["trial_type", "type", "task_type"],
+    "item_order": ["item_order", "trial_order", "order"],
+    "audio_file": ["audio_file", "audio_path", "stimulus_path"],
+    "plays_used": ["plays_used", "play_count", "n_plays"],
+    "response_time_sec": ["response_time_sec", "response_time_seconds", "duration_seconds", "rt_seconds", "time_seconds"],
+    "study_elapsed_sec": ["study_elapsed_sec", "study_elapsed_seconds", "elapsed_sec", "elapsed_seconds"],
+    "shown_at": ["shown_at", "displayed_at", "started_at"],
+    "submitted_at": ["submitted_at", "completed_at", "ended_at"],
+    "gender": ["gender", "speaker_gender"],
+    "language": ["language", "lang"],
+    "difficulty": ["difficulty"],
+    "audio_quality": ["audio_quality"],
+    "playback_difficulty": ["playback_difficulty"],
+    "comments": ["comments", "comment", "feedback"]
+  },
+  "attention_trial_values": ["attention", "attention_check", "check"],
+  "attention_check_include_overrides": [
+    {
+      "list_id": "3",
+      "participant_id": "63f93b47bb0c1a1aca131480",
+      "session_id": "a1780264-721e-4d73-b3a7-cfc4a0893277",
+      "reviewed_at": "2026-10-16",
+      "reason": "Manual review approved inclusion: the participant entered XXX on three attention checks but completed the regular transcription task; retain the failed checks for audit and report a sensitivity analysis without this override."
+    },
+    {
+      "list_id": "4",
+      "participant_id": "5efe6daf6a2551378201893e",
+      "session_id": "b49a92f9-edfd-482a-aead-1d384b5a5afc",
+      "reviewed_at": "2026-10-16",
+      "reason": "Manual review approved inclusion: the participant entered beep variants on three attention checks but completed the regular transcription task; retain the failed checks for audit and report a sensitivity analysis without this override."
+    }
+  ],
+  "technical_exclusion_overrides": [
+    {
+      "list_id": "1",
+      "participant_id": "628781515f29a0394e23b15b",
+      "session_id": "7d9fcf4d-eff5-4920-8f9c-8736fea2a2f0",
+      "utterance_id": "60116_550_14-20201223-193908",
+      "condition": "mantis_v5_w2s_baseline_E2E_apt",
+      "reviewed_at": "2026-10-16",
+      "reason": "Participant reported in the postquestionnaire that audio immediately before the PINEAPPLE check did not play and that they entered '-'; this is one of the two matching responses."
+    },
+    {
+      "list_id": "1",
+      "participant_id": "628781515f29a0394e23b15b",
+      "session_id": "7d9fcf4d-eff5-4920-8f9c-8736fea2a2f0",
+      "utterance_id": "60321_550_28-20201223-204509",
+      "condition": "spoken_audio",
+      "reviewed_at": "2026-10-16",
+      "reason": "Participant reported in the postquestionnaire that audio immediately before the PINEAPPLE check did not play and that they entered '-'; this is one of the two matching responses."
+    }
+  ],
+  "timing_qc": {
+    "minimum_session_duration_sec": null,
+    "maximum_session_duration_sec": null,
+    "maximum_trial_response_time_sec": null,
+    "two_play_threshold": 2
+  },
+  "normalization": {
+    "lowercase": true,
+    "unicode_nfkc": true,
+    "standardize_apostrophes": true,
+    "remove_apostrophes": true,
+    "remove_punctuation": true,
+    "collapse_whitespace": true,
+    "cer_remove_spaces": true,
+    "word_map": {
+      "theatre": "theater",
+      "neighbours": "neighbors",
+      "spelt": "spelled"
+    },
+    "excluded_name_phrases": [
+      "stasey",
+      "alfred",
+      "matilde",
+      "jim shooter",
+      "mike zeck",
+      "stef",
+      "leslie"
+    ]
+  },
+  "questionnaire": {
+    "id_columns": ["participant_id", "session_id", "timestamp", "list_id", "source_file"],
+    "free_text_columns": ["comments", "comment", "notes", "note", "feedback"],
+    "categorical_columns": ["difficulty", "audio_quality", "playback_difficulty"]
+  },
+  "visualization": {
+    "enabled": true,
+    "bootstrap_samples": 5000,
+    "random_seed": 20261016,
+    "condition_order": [
+      "mantis_3.2",
+      "mantis_5.2_content_apt",
+      "mantis_v5_w2s_baseline_E2E_apt",
+      "spoken_audio",
+      "whisper_audio"
+    ],
+    "condition_display_names": {
+    "mantis_3.2": "Mantis 3.2",
+    "mantis_5.2_content_apt": "Mantis 5.2 content apt",
+    "mantis_v5_w2s_baseline_E2E_apt": "Mantis e2e apt",
+    "spoken_audio": "Spoken",
+    "whisper_audio": "Whisper"
+  },
+    "gender_order": ["F", "M"],
+    "gender_display_names": {
+      "F": "Female speakers",
+      "M": "Male speakers"
+    },
+    "speaker_order": [
+      "whisppsitevoicetalent_spkr_504",
+      "whisppsitevoicetalent_spkr_520",
+      "whisppsitevoicetalent_spkr_540",
+      "whisppsitevoicetalent_spkr_550"
+    ],
+    "speaker_display_names": {
+      "whisppsitevoicetalent_spkr_504": "Speaker 504",
+      "whisppsitevoicetalent_spkr_520": "Speaker 520",
+      "whisppsitevoicetalent_spkr_540": "Speaker 540",
+      "whisppsitevoicetalent_spkr_550": "Speaker 550"
+    }
+  },
+  "fail_on_structural_qc": true
+}
