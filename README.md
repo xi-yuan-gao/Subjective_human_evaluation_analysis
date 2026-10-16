@@ -186,6 +186,14 @@ The pipeline generates five vector figures:
 
 Error-rate intervals use a participant-clustered percentile bootstrap with a fixed random seed. Participants are sampled with replacement and their responses remain together within each resample. These intervals describe listener-level uncertainty; they do not replace a preregistered mixed-effects analysis. Gender and speaker results describe the four speakers in this experiment and must not be interpreted as population-level gender effects.
 
+#### Inter-listener consistency
+
+The pipeline measures variation in WER and CER across listeners for each `utterance_id × condition` group. It reports the sample standard deviation and range of the listener scores.
+
+The condition-level summary uses only groups containing the configured number of distinct listeners. Incomplete groups remain visible in the detailed utterance-condition output and are counted separately.
+
+Lower variation indicates that listeners produced more similar accuracy scores for the same audio. This analysis complements the participant-clustered confidence intervals: confidence intervals describe uncertainty in a condition-level mean, whereas inter-listener variation describes consistency among listeners evaluating the same audio. With only three listeners per group, these values are descriptive and should not be interpreted as formal reliability coefficients.
+
 ### Output structure
 
 ```text
@@ -222,6 +230,8 @@ analysis_output/
 │   ├── by_utterance_condition.csv
 │   ├── by_list.csv
 │   ├── plays_wer_summary.csv
+│   ├── inter_listener_consistency_by_utterance_condition.csv
+│   ├── inter_listener_consistency_by_condition.csv
 │   └── technical_exclusion_sensitivity.csv
 ├── 05_questionnaire/
 │   ├── eligible_responses.csv

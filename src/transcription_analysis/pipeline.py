@@ -15,7 +15,12 @@ from .normalize import (
 )
 from .questionnaire import summarize_questionnaire
 from .schema import REQUIRED_MAIN_FIELDS, canonicalize, duplicate_groups, resolve_columns
-from .summarize import summarize_plays_wer, summarize_scores, summarize_xxx
+from .summarize import (
+    summarize_inter_listener_consistency,
+    summarize_plays_wer,
+    summarize_scores,
+    summarize_xxx,
+)
 from .timing import session_timing_qc
 from .visualize import generate_figures
 
@@ -54,7 +59,7 @@ This directory contains one complete analysis run.
 1. Start with `01_qc/qc_summary.txt`. If QC is blocked, inspect `01_qc/qc_issues.csv` and the relevant detailed audit. Approved playback failures are recorded in `01_qc/technical_exclusion_audit.csv`.
 2. Review `02_preprocessed/normalized_transcriptions.csv` to verify text normalization and personal-name exclusions.
 3. Use `03_scores/transcription_scores.csv` for response-level WER, CER, substitution, deletion, insertion, and `xxx` results.
-4. Use `04_summaries/by_condition.csv` for the primary system comparison. When technical exclusions were applied, compare it with `04_summaries/technical_exclusion_sensitivity.csv`.
+4. Use `04_summaries/by_condition.csv` for the primary system comparison. When technical exclusions were applied, compare it with `04_summaries/technical_exclusion_sensitivity.csv`. The two `inter_listener_consistency` tables provide a supplementary descriptive check of variation across listeners.
 5. Review participant feedback separately under `05_questionnaire/`.
 6. Use the vector figures in `06_figures/` for reports and presentations. The plot-data CSVs record the exact condition values and the gender-by-condition and speaker-by-condition values with confidence intervals. Gender and speaker comparisons are descriptive for this experiment's four speakers.
 
@@ -1110,6 +1115,22 @@ def run_pipeline(results_root: Path, output_root: Path, config: dict[str, Any]) 
     for filename, keys in summaries.items():
         write_csv(output_root / "04_summaries" / filename, summarize_scores(scored, keys, two_play_threshold))
     write_csv(output_root / "04_summaries" / "plays_wer_summary.csv", summarize_plays_wer(scored))
+    consistency_by_item, consistency_by_condition = summarize_inter_listener_consistency(
+        scored,
+        int(config["expected_ratings_per_utterance_condition"]),
+    )
+    write_csv(
+        output_root
+        / "04_summaries"
+        / "inter_listener_consistency_by_utterance_condition.csv",
+        consistency_by_item,
+    )
+    write_csv(
+        output_root
+        / "04_summaries"
+        / "inter_listener_consistency_by_condition.csv",
+        consistency_by_condition,
+    )
     affected_conditions = {
         str(row["condition"])
         for row in technical_exclusion_audit
