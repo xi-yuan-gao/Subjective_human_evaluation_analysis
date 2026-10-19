@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: transcription-analysis
+Version: 0.2.0
+Summary: Reusable QC and analysis pipeline for counterbalanced transcription experiments
+Requires-Python: >=3.9
+Provides-Extra: mixed-effects
+Requires-Dist: numpy<3,>=1.24; extra == "mixed-effects"
+Requires-Dist: pandas<3,>=2; extra == "mixed-effects"
+Requires-Dist: scipy<2,>=1.10; extra == "mixed-effects"
+Requires-Dist: statsmodels<0.15,>=0.14; extra == "mixed-effects"

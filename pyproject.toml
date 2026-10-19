@@ -9,8 +9,17 @@ description = "Reusable QC and analysis pipeline for counterbalanced transcripti
 requires-python = ">=3.9"
 dependencies = []
 
+[project.optional-dependencies]
+mixed-effects = [
+  "numpy>=1.24,<3",
+  "pandas>=2,<3",
+  "scipy>=1.10,<2",
+  "statsmodels>=0.14,<0.15",
+]
+
 [project.scripts]
 transcription-analysis = "transcription_analysis.cli:main"
+transcription-mixed-effects = "transcription_analysis.mixed_effects:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

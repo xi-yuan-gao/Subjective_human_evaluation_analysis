@@ -1,6 +1,6 @@
 # Transcription experiment analysis
 
-This repository provides a reusable, auditable pipeline for quality-controlling, scoring, summarizing, and visualizing a counterbalanced human transcription experiment. It uses only the Python standard library, keeps raw CSV files unchanged, and stops before scoring when the experiment structure is incomplete.
+This repository provides a reusable, auditable pipeline for quality-controlling, scoring, summarizing, and visualizing a counterbalanced human transcription experiment. The core pipeline uses only the Python standard library; the optional mixed-effects analysis uses the dependencies declared in `mixed-effects`. Raw CSV files remain unchanged, and the pipeline stops before scoring when the experiment structure is incomplete.
 
 The current experiment is configured for:
 
@@ -26,6 +26,7 @@ flowchart LR
     F --> G[Normalize text<br/>preserve raw text]
     G --> H[Response-level scoring<br/>WER, CER, S/D/I, xxx]
     H --> I[Aggregate summaries<br/>condition, speaker, listener, item]
+    H --> L[Optional mixed-effects tests<br/>overall condition and selected pair]
     I --> J[Questionnaire summaries]
     I --> K[Report-ready figures<br/>clustered intervals]
 ```
@@ -37,6 +38,7 @@ The main safety boundary is between QC and scoring. All QC reports are written f
 ```text
 .
 ├── run_analysis.py
+├── run_mixed_effects.py
 ├── config/analysis_config.json
 ├── src/transcription_analysis/
 │   ├── cli.py
@@ -46,12 +48,14 @@ The main safety boundary is between QC and scoring. All QC reports are written f
 │   ├── pipeline.py
 │   ├── normalize.py
 │   ├── metrics.py
+│   ├── mixed_effects.py
 │   ├── summarize.py
 │   ├── timing.py
 │   ├── questionnaire.py
 │   └── visualize.py
 ├── tests/
 │   ├── test_metrics.py
+│   ├── test_mixed_effects.py
 │   ├── test_pipeline.py
 │   └── test_timing.py
 └── results/
@@ -66,6 +70,7 @@ The main safety boundary is between QC and scoring. All QC reports are written f
 | `pipeline.py` | Coordinate loading, QC, exclusions, scoring, summaries, and outputs. |
 | `normalize.py` | Apply conservative text normalization and locate configured name spans. |
 | `metrics.py` | Calculate edit distance, S/D/I counts, WER, CER, and name-aware alignments. |
+| `mixed_effects.py` | Test the overall condition effect and an optional selected condition pair while accounting for repeated listeners and utterances. |
 | `summarize.py` | Aggregate results at condition, speaker, listener, item, and list levels. |
 | `timing.py` | Produce non-blocking session-timing review diagnostics. |
 | `questionnaire.py` | Summarize categorical responses and preserve free-text comments. |
@@ -148,6 +153,18 @@ CER = (character substitutions + character deletions + character insertions) / r
 
 CER removes spaces by default. Set `normalization.cer_remove_spaces` to `false` if spaces should count as characters. A blank transcription is retained and scored as deletion of the complete reference. A missing transcription column remains a blocking schema error.
 
+#### Mixed-effects condition analysis
+
+A post-hoc analysis fits linear mixed-effects models for WER and CER:
+
+```text
+WER or CER ~ condition + speaker + (1 | listener) + (1 | utterance)
+```
+
+Condition and speaker are fixed effects. Listener and utterance are crossed random intercepts, accounting for repeated measurements from the same listener and repeated use of the same utterance. The overall condition result is a joint Wald chi-square test of all condition coefficients; significance means at least one condition differs.
+
+A selected comparison tests one condition against another within the same fitted model. It reports `FIRST − SECOND`, its standard error, 95% confidence interval, Wald z statistic, and two-sided p-value. A negative difference means the first condition has the lower error rate. No multiplicity correction is applied because one comparison is selected per run; choose that pair before inspecting its p-value.
+
 #### Personal-name exclusion
 
 Names in `normalization.excluded_name_phrases` are matched in the normalized reference and represented as wildcard spans. A wildcard can absorb the listener's rendering of that name, including a misspelling, without contributing an error. Surrounding words remain scored.
@@ -158,13 +175,13 @@ Review `reference_text_scored`, `transcription_scored`, `excluded_name_phrases`,
 
 `mean_wer` and `mean_cer` are macro averages: every response-level error rate receives equal weight.
 
-`micro_wer` and word-level S/D/I composition are pooled:
+`micro_wer` is pooled:
 
 ```text
 micro WER = total word errors / total reference words
 ```
 
-Longer references contribute more weight to pooled rates. The condition WER/CER figure uses macro means, while the error-composition figure uses pooled S/D/I counts. Their totals are not required to be identical.
+Longer references contribute more weight to pooled rates. The condition WER/CER figure and error-composition figure both use means of response-level rates. Therefore, the stacked substitution, deletion, and insertion rates equal the reported macro mean WER or CER for each condition.
 
 #### `xxx` diagnostics
 
@@ -176,13 +193,14 @@ Scores are summarized by condition, speaker, speaker-condition, listener, listen
 
 The postquestionnaire remains descriptive. Categorical responses are counted overall and within each list. Comments are preserved verbatim with participant/session identifiers. Labels such as “Very easy” and “Good” are not converted to numbers because equal spacing between categories has not been established. Questionnaire responses provide diagnostic context rather than automatically changing intelligibility scores.
 
-The pipeline generates five vector figures:
+The pipeline generates six vector figures:
 
 - condition-level mean WER and CER;
 - gender × condition mean WER and CER;
 - speaker × condition mean WER and CER;
-- word-level and character-level S/D/I composition by condition; and
-- partial and whole-response `xxx` rates by condition.
+- word-level and character-level S/D/I composition by condition;
+- partial and whole-response `xxx` rates by condition; and
+- inter-listener WER/CER variation by condition.
 
 Error-rate intervals use a participant-clustered percentile bootstrap with a fixed random seed. Participants are sampled with replacement and their responses remain together within each resample. These intervals describe listener-level uncertainty; they do not replace a preregistered mixed-effects analysis. Gender and speaker results describe the four speakers in this experiment and must not be interpreted as population-level gender effects.
 
@@ -237,25 +255,34 @@ analysis_output/
 │   ├── eligible_responses.csv
 │   ├── categorical_summary.csv
 │   └── comments.csv
-└── 06_figures/
-    ├── condition_plot_data.csv
-    ├── gender_condition_plot_data.csv
-    ├── speaker_condition_plot_data.csv
-    ├── condition_error_rates.svg
-    ├── gender_error_rates.svg
-    ├── speaker_error_rates.svg
-    ├── error_composition.svg
-    └── xxx_rates.svg
+├── 06_figures/
+│   ├── condition_plot_data.csv
+│   ├── gender_condition_plot_data.csv
+│   ├── speaker_condition_plot_data.csv
+│   ├── inter_listener_consistency_plot_data.csv
+│   ├── condition_error_rates.svg
+│   ├── gender_error_rates.svg
+│   ├── speaker_error_rates.svg
+│   ├── error_composition.svg
+│   ├── xxx_rates.svg
+│   └── inter_listener_consistency.svg
+└── 07_mixed_effects/                  # Optional; generated separately
+    ├── condition_effect_tests.csv
+    ├── selected_condition_comparison.csv  # Only with --compare-conditions
+    ├── condition_effect_summary.txt
+    └── model_audit.json
 ```
 
 `transcription_scores.csv` is the response-level analytical source of truth. `by_condition.csv` is the primary descriptive system comparison. `technical_exclusion_sensitivity.csv` is created only when approved technical exclusions are applied, and `by_gender_condition.csv` is created only when gender metadata are available.
+
+For mixed effects, `condition_effect_tests.csv` contains the omnibus WER/CER tests, `selected_condition_comparison.csv` contains the optional chosen pair, `condition_effect_summary.txt` gives the plain-language conclusions, and `model_audit.json` records the model specification, convergence, diagnostics, selected pair, and input hashes.
 
 ## Instructions for using the repository
 
 ### Requirements
 
 - Python 3.9 or newer;
-- no third-party Python packages; and
+- no third-party packages for the core pipeline; optional mixed-effects dependencies are installed separately; and
 - an empty or new output directory for each run.
 
 ### Expected input folders
@@ -300,11 +327,11 @@ Tests run separately from real analysis and use temporary synthetic data. They d
 PYTHONPATH=src python3 -m unittest discover -s tests -v
 ```
 
-The tests cover normalization, edit decomposition, name wildcards, blank transcriptions, attention checks and overrides, technical exclusions, timing QC, eligibility blocking, counterbalanced coverage, figures, and end-to-end output creation.
+The tests cover normalization, edit decomposition, name wildcards, blank transcriptions, attention checks and overrides, technical exclusions, timing QC, eligibility blocking, counterbalanced coverage, figures, mixed-effects condition tests, and end-to-end output creation. Mixed-effects tests are skipped when their optional dependencies are not installed.
 
 Passing tests confirms that implemented rules behave as expected on controlled examples. It does not replace reviewing real QC and scored rows.
 
-### Run the analysis
+### Run the core analysis (no mixed-effects analysis)
 
 ```bash
 python3 run_analysis.py \
@@ -323,6 +350,35 @@ python3 run_analysis.py \
 ```
 
 The raw input files are never modified.
+
+#### Run the mixed-effects analysis
+
+Run this after the main analysis has created `03_scores/transcription_scores.csv`. Install the optional dependencies once:
+
+```bash
+python3 -m pip install -e '.[mixed-effects]'
+```
+
+For the overall condition effect only:
+
+```bash
+python3 run_mixed_effects.py \
+  --scores ./analysis_output/03_scores/transcription_scores.csv \
+  --output-root ./analysis_output/07_mixed_effects \
+  --config ./config/analysis_config.json
+```
+
+To also compare one selected pair, add `--compare-conditions FIRST SECOND` and use a new output directory:
+
+```bash
+python3 run_mixed_effects.py \
+  --scores ./analysis_output/03_scores/transcription_scores.csv \
+  --output-root ./analysis_output/07_mixed_effects_conditionA_vs_conditionB \
+  --config ./config/analysis_config.json \
+  --compare-conditions condition_A condition_B
+```
+
+Use the exact condition names in `expected_conditions`. The selected comparison is calculated as `FIRST − SECOND` for both WER and CER. Each mixed-effects output directory must be new or empty.
 
 ### QC
 
@@ -388,4 +444,6 @@ Review a successful run in this order:
 6. speaker-, listener-, list-, and utterance-level diagnostics;
 7. questionnaire responses; and
 8. figures together with their plot-data CSVs.
+
+If mixed-effects analysis was run, then review `condition_effect_summary.txt`, followed by `condition_effect_tests.csv`, the optional `selected_condition_comparison.csv`, and `model_audit.json`.
 
