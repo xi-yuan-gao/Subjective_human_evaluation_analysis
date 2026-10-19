@@ -340,14 +340,7 @@ python3 run_analysis.py \
   --config ./config/analysis_config.json
 ```
 
-Input and output directories must be separate and non-overlapping. The pipeline does not reuse a non-empty output directory so stale files cannot be mistaken for current results. For repeated analyses, use a versioned path:
-
-```bash
-python3 run_analysis.py \
-  --results-root ./results \
-  --output-root ./analysis_runs/2026-10-16_v1 \
-  --config ./config/analysis_config.json
-```
+Input and output directories must be separate and non-overlapping. The pipeline does not reuse a non-empty output directory so stale files cannot be mistaken for current results.
 
 The raw input files are never modified.
 
