@@ -195,7 +195,7 @@ The postquestionnaire remains descriptive. Categorical responses are counted ove
 
 The pipeline generates six vector figures:
 
-- condition-level mean WER and CER;
+- response-level WER and CER box-and-dot distributions by condition;
 - gender × condition mean WER and CER;
 - speaker × condition mean WER and CER;
 - word-level and character-level S/D/I composition by condition;
@@ -257,10 +257,11 @@ analysis_output/
 │   └── comments.csv
 ├── 06_figures/
 │   ├── condition_plot_data.csv
+│   ├── error_rate_distribution_plot_data.csv
 │   ├── gender_condition_plot_data.csv
 │   ├── speaker_condition_plot_data.csv
 │   ├── inter_listener_consistency_plot_data.csv
-│   ├── condition_error_rates.svg
+│   ├── error_rate_distributions.svg
 │   ├── gender_error_rates.svg
 │   ├── speaker_error_rates.svg
 │   ├── error_composition.svg

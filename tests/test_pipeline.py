@@ -8,7 +8,10 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from transcription_analysis.pipeline import QCError, run_pipeline
-from transcription_analysis.visualize import _condition_plot_data
+from transcription_analysis.visualize import (
+    _condition_plot_data,
+    _error_distribution_plot_data,
+)
 
 
 CONDITIONS = ["a", "b", "c", "d", "e"]
@@ -208,6 +211,15 @@ class PipelineTests(unittest.TestCase):
         self.assertAlmostEqual(rows[0]["substitution_rate"], 0.5)
         self.assertAlmostEqual(rows[0]["mean_cer"], 0.5)
         self.assertAlmostEqual(rows[0]["character_substitution_rate"], 0.5)
+        distribution_rows = _error_distribution_plot_data(
+            scored,
+            ["a"],
+            {"condition_display_names": {"a": "A"}},
+        )
+        self.assertEqual(len(distribution_rows), 2)
+        self.assertEqual(distribution_rows[0]["condition_display_name"], "A")
+        self.assertEqual(distribution_rows[0]["wer"], 1.0)
+        self.assertEqual(distribution_rows[1]["cer"], 0.0)
 
     def test_complete_counterbalanced_run(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -234,10 +246,11 @@ class PipelineTests(unittest.TestCase):
             self.assertTrue((output / "04_summaries" / "by_gender_condition.csv").exists())
             self.assertTrue((output / "05_questionnaire" / "eligible_responses.csv").exists())
             self.assertTrue((output / "06_figures" / "condition_plot_data.csv").exists())
+            self.assertTrue((output / "06_figures" / "error_rate_distribution_plot_data.csv").exists())
             self.assertTrue((output / "06_figures" / "gender_condition_plot_data.csv").exists())
             self.assertTrue((output / "06_figures" / "speaker_condition_plot_data.csv").exists())
             self.assertTrue((output / "06_figures" / "inter_listener_consistency_plot_data.csv").exists())
-            self.assertTrue((output / "06_figures" / "condition_error_rates.svg").exists())
+            self.assertTrue((output / "06_figures" / "error_rate_distributions.svg").exists())
             self.assertTrue((output / "06_figures" / "gender_error_rates.svg").exists())
             self.assertTrue((output / "06_figures" / "speaker_error_rates.svg").exists())
             self.assertTrue((output / "06_figures" / "error_composition.svg").exists())
@@ -268,6 +281,11 @@ class PipelineTests(unittest.TestCase):
                 )
                 self.assertAlmostEqual(word_components, float(row["mean_wer"]))
                 self.assertAlmostEqual(character_components, float(row["mean_cer"]))
+            with (output / "06_figures" / "error_rate_distribution_plot_data.csv").open(encoding="utf-8") as handle:
+                distribution_rows = list(csv.DictReader(handle))
+            self.assertEqual(len(distribution_rows), 75)
+            self.assertIn("wer", distribution_rows[0])
+            self.assertIn("cer", distribution_rows[0])
             with (output / "06_figures" / "gender_condition_plot_data.csv").open(encoding="utf-8") as handle:
                 gender_plot_rows = list(csv.DictReader(handle))
             self.assertIn("condition", gender_plot_rows[0])

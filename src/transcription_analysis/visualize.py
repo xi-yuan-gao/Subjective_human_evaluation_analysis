@@ -239,85 +239,41 @@ def _condition_plot_data(
     return output
 
 
-def _draw_error_rate_figure(
-    data: list[dict[str, Any]],
-    path: Path,
-    *,
-    title: str,
-    subtitle: str,
-) -> None:
-    width, height = 1180, 520
-    top, bottom = 88, 65
-    panel_width = 475
-    label_width = 205
-    panels = [
-        (35, "Word error rate", "mean_wer", "wer_ci_low", "wer_ci_high", BLUE),
-        (620, "Character error rate", "mean_cer", "cer_ci_low", "cer_ci_high", ORANGE),
-    ]
-    body = [
-        _text(35, 34, title, size=20, weight=500),
-        _text(
-            35,
-            58,
-            subtitle,
-            size=12,
-            color=GRAY,
-        ),
-    ]
-    row_gap = (height - top - bottom) / max(1, len(data))
-    for panel_x, title, value_key, low_key, high_key, color in panels:
-        chart_x = panel_x + label_width
-        chart_width = panel_width - label_width
-        maximum = _nice_max([float(row[high_key]) for row in data])
-        body.append(_text(panel_x, 82, title, size=15, weight=500))
-        for tick_index in range(5):
-            tick = maximum * tick_index / 4
-            x = chart_x + chart_width * tick / maximum
-            body.append(
-                f'<line x1="{x:.1f}" y1="{top}" x2="{x:.1f}" y2="{height-bottom}" stroke="{LIGHT_GRAY}" stroke-width="1"/>'
-            )
-            body.append(
-                _text(x, height - 38, f"{tick:.0%}", anchor="middle", size=11, color=GRAY)
-            )
-        for row_index, row in enumerate(data):
-            y = top + row_gap * (row_index + 0.5)
-            value = float(row[value_key])
-            low = float(row[low_key])
-            high = float(row[high_key])
-            x = chart_x + chart_width * value / maximum
-            x_low = chart_x + chart_width * low / maximum
-            x_high = chart_x + chart_width * high / maximum
-            body.append(_text(panel_x, y + 4, row["display_name"], size=12))
-            body.append(
-                f'<line x1="{x_low:.1f}" y1="{y:.1f}" x2="{x_high:.1f}" y2="{y:.1f}" stroke="{color}" stroke-width="3"/>'
-            )
-            body.append(
-                f'<line x1="{x_low:.1f}" y1="{y-6:.1f}" x2="{x_low:.1f}" y2="{y+6:.1f}" stroke="{color}" stroke-width="2"/>'
-            )
-            body.append(
-                f'<line x1="{x_high:.1f}" y1="{y-6:.1f}" x2="{x_high:.1f}" y2="{y+6:.1f}" stroke="{color}" stroke-width="2"/>'
-            )
-            body.append(
-                f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5" fill="{color}"/>'
-            )
-            label_x = min(chart_x + chart_width - 2, x_high + 8)
-            anchor = "end" if label_x >= chart_x + chart_width - 4 else "start"
-            body.append(
-                _text(label_x, y + 4, f"{value:.1%}", anchor=anchor, size=11, weight=500)
-            )
-        body.append(
-            _text(
-                chart_x + chart_width / 2,
-                height - 13,
-                "Error rate",
-                anchor="middle",
-                size=12,
-                color=GRAY,
-            )
+def _error_distribution_plot_data(
+    scored: list[dict[str, Any]],
+    conditions: list[str],
+    settings: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Return the response-level WER/CER values used in distribution figures."""
+    condition_set = set(conditions)
+    display_names = settings.get("condition_display_names", {})
+    output: list[dict[str, Any]] = []
+    for row in scored:
+        condition = str(row.get("condition", "")).strip()
+        wer = _number(row.get("wer"))
+        cer = _number(row.get("cer"))
+        if condition not in condition_set or wer is None or cer is None:
+            continue
+        output.append(
+            {
+                "condition": condition,
+                "condition_display_name": display_names.get(condition, condition),
+                "participant_id": row.get("participant_id", ""),
+                "session_id": row.get("session_id", ""),
+                "utterance_id": row.get("utterance_id", ""),
+                "wer": wer,
+                "cer": cer,
+            }
         )
-    path.write_text(
-        _svg_document(width, height, title, body),
-        encoding="utf-8",
+    condition_order = {condition: index for index, condition in enumerate(conditions)}
+    return sorted(
+        output,
+        key=lambda row: (
+            condition_order[str(row["condition"])],
+            str(row["participant_id"]),
+            str(row["session_id"]),
+            str(row["utterance_id"]),
+        ),
     )
 
 
@@ -436,6 +392,121 @@ def _draw_group_condition_error_figure(
             )
         )
     path.write_text(_svg_document(width, height, title, body), encoding="utf-8")
+
+
+def _draw_error_distribution_figure(
+    data: list[dict[str, Any]],
+    path: Path,
+    conditions: list[str],
+) -> None:
+    """Draw response-level WER/CER distributions as box-and-dot plots."""
+    width, height = 1420, 555
+    top, bottom = 112, 66
+    panel_width = 570
+    label_width = 205
+    chart_width = panel_width - label_width
+    panels = [
+        (35, "Word error rate", "wer", BLUE),
+        (760, "Character error rate", "cer", ORANGE),
+    ]
+    present_conditions = [
+        condition
+        for condition in conditions
+        if any(str(row["condition"]) == condition for row in data)
+    ]
+    row_gap = (height - top - bottom) / max(1, len(present_conditions))
+    maximum = _nice_max(
+        [float(row[metric]) for row in data for metric in ("wer", "cer")],
+        minimum=0.50,
+    )
+    body = [
+        _text(35, 34, "Transcription error rates by condition", size=20, weight=500),
+        _text(
+            35,
+            58,
+            "Dots are responses; boxes show the middle 50% and median; open circles and labels show means. Lower is better.",
+            size=12,
+            color=GRAY,
+        ),
+    ]
+    for panel_x, panel_title, metric, color in panels:
+        chart_x = panel_x + label_width
+        body.append(_text(panel_x, 90, panel_title, size=15, weight=500))
+        for tick_index in range(5):
+            tick = maximum * tick_index / 4
+            x = chart_x + chart_width * tick / maximum
+            body.append(
+                f'<line x1="{x:.1f}" y1="{top}" x2="{x:.1f}" y2="{height-bottom}" stroke="{LIGHT_GRAY}" stroke-width="1"/>'
+            )
+            body.append(
+                _text(x, height - 38, f"{tick:.0%}", anchor="middle", size=11, color=GRAY)
+            )
+        scale = lambda value: chart_x + chart_width * value / maximum
+        for row_index, condition in enumerate(present_conditions):
+            group = [row for row in data if str(row["condition"]) == condition]
+            values = sorted(float(row[metric]) for row in group)
+            if not values:
+                continue
+            center_y = top + row_gap * (row_index + 0.5)
+            display_name = str(group[0]["condition_display_name"])
+            body.append(_text(panel_x, center_y + 4, display_name, size=12))
+            q1 = _quantile(values, 0.25)
+            median_value = _quantile(values, 0.50)
+            q3 = _quantile(values, 0.75)
+            iqr = q3 - q1
+            lower_candidates = [value for value in values if value >= q1 - 1.5 * iqr]
+            upper_candidates = [value for value in values if value <= q3 + 1.5 * iqr]
+            whisker_low = min(lower_candidates) if lower_candidates else min(values)
+            whisker_high = max(upper_candidates) if upper_candidates else max(values)
+            jitter = (-8, -4, 0, 4, 8)
+            for value_index, value in enumerate(values):
+                dot_y = center_y + jitter[value_index % len(jitter)]
+                body.append(
+                    f'<circle cx="{scale(value):.1f}" cy="{dot_y:.1f}" r="2.1" fill="{GRAY}" fill-opacity="0.30"/>'
+                )
+            body.append(
+                f'<line x1="{scale(whisker_low):.1f}" y1="{center_y:.1f}" x2="{scale(whisker_high):.1f}" y2="{center_y:.1f}" stroke="{color}" stroke-width="2"/>'
+            )
+            body.append(
+                f'<line x1="{scale(whisker_low):.1f}" y1="{center_y-7:.1f}" x2="{scale(whisker_low):.1f}" y2="{center_y+7:.1f}" stroke="{color}" stroke-width="2"/>'
+            )
+            body.append(
+                f'<line x1="{scale(whisker_high):.1f}" y1="{center_y-7:.1f}" x2="{scale(whisker_high):.1f}" y2="{center_y+7:.1f}" stroke="{color}" stroke-width="2"/>'
+            )
+            body.append(
+                f'<rect x="{scale(q1):.1f}" y="{center_y-12:.1f}" width="{max(1.0, scale(q3)-scale(q1)):.1f}" height="24" fill="{color}" fill-opacity="0.24" stroke="{color}" stroke-width="2"/>'
+            )
+            body.append(
+                f'<line x1="{scale(median_value):.1f}" y1="{center_y-14:.1f}" x2="{scale(median_value):.1f}" y2="{center_y+14:.1f}" stroke="{color}" stroke-width="3"/>'
+            )
+            mean_value = mean(values)
+            body.append(
+                f'<circle cx="{scale(mean_value):.1f}" cy="{center_y:.1f}" r="5" fill="{BACKGROUND}" stroke="{color}" stroke-width="2.5"/>'
+            )
+            body.append(
+                _text(
+                    chart_x + chart_width + 8,
+                    center_y + 4,
+                    f"{mean_value:.1%}",
+                    size=11,
+                    weight=500,
+                    color=color,
+                )
+            )
+        body.append(
+            _text(
+                chart_x + chart_width / 2,
+                height - 12,
+                "Error rate",
+                anchor="middle",
+                size=12,
+                color=GRAY,
+            )
+        )
+    path.write_text(
+        _svg_document(width, height, "Transcription error rates by condition", body),
+        encoding="utf-8",
+    )
 
 
 def _draw_error_composition_figure(data: list[dict[str, Any]], path: Path) -> None:
@@ -729,6 +800,7 @@ def generate_figures(
         if any(str(row.get("condition", "")) == condition for row in scored)
     ]
     condition_data = _condition_plot_data(scored, conditions, settings)
+    distribution_data = _error_distribution_plot_data(scored, conditions, settings)
     genders = [
         str(value) for value in settings.get("gender_order", ["F", "M"])
         if any(str(row.get("gender", "")).strip() == str(value) for row in scored)
@@ -756,6 +828,7 @@ def generate_figures(
         settings,
     )
     write_csv(output_root / "condition_plot_data.csv", condition_data)
+    write_csv(output_root / "error_rate_distribution_plot_data.csv", distribution_data)
     write_csv(output_root / "gender_condition_plot_data.csv", gender_data)
     write_csv(output_root / "speaker_condition_plot_data.csv", speaker_data)
     consistency_data = _consistency_plot_data(
@@ -767,11 +840,10 @@ def generate_figures(
         output_root / "inter_listener_consistency_plot_data.csv",
         consistency_data,
     )
-    _draw_error_rate_figure(
-        condition_data,
-        output_root / "condition_error_rates.svg",
-        title="Transcription error rates by condition",
-        subtitle="Points are means; whiskers are listener-clustered 95% bootstrap intervals. Lower is better.",
+    _draw_error_distribution_figure(
+        distribution_data,
+        output_root / "error_rate_distributions.svg",
+        conditions,
     )
     _draw_group_condition_error_figure(
         gender_data,
@@ -792,7 +864,7 @@ def generate_figures(
     _draw_error_composition_figure(condition_data, output_root / "error_composition.svg")
     _draw_xxx_figure(condition_data, output_root / "xxx_rates.svg")
     figures = [
-        "condition_error_rates.svg",
+        "error_rate_distributions.svg",
         "gender_error_rates.svg",
         "speaker_error_rates.svg",
         "error_composition.svg",
