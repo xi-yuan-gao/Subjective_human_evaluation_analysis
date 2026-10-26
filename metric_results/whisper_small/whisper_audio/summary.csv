@@ -1,0 +1,9 @@
+model_name,language,gender,speaker_id,metric,score,mean,n
+whisper_audio,eng,F,whisppsitevoicetalent_spkr_540,asr,wer,0.0,8
+whisper_audio,eng,F,whisppsitevoicetalent_spkr_540,asr,cer,0.0,8
+whisper_audio,eng,F,whisppsitevoicetalent_spkr_550,asr,wer,0.11354166666666667,8
+whisper_audio,eng,F,whisppsitevoicetalent_spkr_550,asr,cer,0.057103966813585684,8
+whisper_audio,eng,M,whisppsitevoicetalent_spkr_504,asr,wer,0.011363636363636364,8
+whisper_audio,eng,M,whisppsitevoicetalent_spkr_504,asr,cer,0.002777777777777778,8
+whisper_audio,eng,M,whisppsitevoicetalent_spkr_520,asr,wer,0.03518518518518519,6
+whisper_audio,eng,M,whisppsitevoicetalent_spkr_520,asr,cer,0.01087962962962963,6

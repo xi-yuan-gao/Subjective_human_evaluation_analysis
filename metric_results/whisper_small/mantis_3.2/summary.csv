@@ -1,0 +1,9 @@
+model_name,language,gender,speaker_id,metric,score,mean,n
+mantis_3.2,eng,F,whisppsitevoicetalent_spkr_540,asr,wer,0.078125,8
+mantis_3.2,eng,F,whisppsitevoicetalent_spkr_540,asr,cer,0.04386363636363637,8
+mantis_3.2,eng,F,whisppsitevoicetalent_spkr_550,asr,wer,0.3617559523809524,8
+mantis_3.2,eng,F,whisppsitevoicetalent_spkr_550,asr,cer,0.25414290035433407,8
+mantis_3.2,eng,M,whisppsitevoicetalent_spkr_504,asr,wer,0.27686237373737377,8
+mantis_3.2,eng,M,whisppsitevoicetalent_spkr_504,asr,cer,0.15923864147548356,8
+mantis_3.2,eng,M,whisppsitevoicetalent_spkr_520,asr,wer,0.3267195767195767,6
+mantis_3.2,eng,M,whisppsitevoicetalent_spkr_520,asr,cer,0.16610897220772117,6

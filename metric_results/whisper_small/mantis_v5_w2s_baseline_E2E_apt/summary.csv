@@ -1,0 +1,9 @@
+model_name,language,gender,speaker_id,metric,score,mean,n
+mantis_v5_w2s_baseline_E2E_apt,eng,F,whisppsitevoicetalent_spkr_540,asr,wer,0.049107142857142856,8
+mantis_v5_w2s_baseline_E2E_apt,eng,F,whisppsitevoicetalent_spkr_540,asr,cer,0.03522727272727273,8
+mantis_v5_w2s_baseline_E2E_apt,eng,F,whisppsitevoicetalent_spkr_550,asr,wer,0.16294642857142858,8
+mantis_v5_w2s_baseline_E2E_apt,eng,F,whisppsitevoicetalent_spkr_550,asr,cer,0.08977184340160746,8
+mantis_v5_w2s_baseline_E2E_apt,eng,M,whisppsitevoicetalent_spkr_504,asr,wer,0.226010101010101,8
+mantis_v5_w2s_baseline_E2E_apt,eng,M,whisppsitevoicetalent_spkr_504,asr,cer,0.0943482905982906,8
+mantis_v5_w2s_baseline_E2E_apt,eng,M,whisppsitevoicetalent_spkr_520,asr,wer,0.04894179894179893,6
+mantis_v5_w2s_baseline_E2E_apt,eng,M,whisppsitevoicetalent_spkr_520,asr,cer,0.02048194206213074,6

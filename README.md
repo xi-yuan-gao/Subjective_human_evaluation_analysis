@@ -195,7 +195,7 @@ The postquestionnaire remains descriptive. Categorical responses are counted ove
 
 The pipeline generates six vector figures:
 
-- response-level WER and CER box-and-dot distributions by condition;
+- WER and CER box-and-dot distributions by condition;
 - gender × condition mean WER and CER;
 - speaker × condition mean WER and CER;
 - word-level and character-level S/D/I composition by condition;
