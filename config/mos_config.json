@@ -1,0 +1,60 @@
+{
+  "_template_note": "Copy this template and replace the example list, condition, count, and display settings before analyzing a MOS study. Item IDs must already be unique and canonical.",
+  "list_directory_pattern": "mos_list{list_id}",
+  "list_ids": [1],
+  "expected_participants_per_list": 1,
+  "expected_ratings_per_participant": 2,
+  "expected_attention_checks_per_participant": 1,
+  "expected_ratings_per_stimulus_condition": 1,
+  "expected_conditions": ["condition_a", "condition_b"],
+  "rating_scale": [1, 2, 3, 4, 5],
+  "column_aliases": {
+    "participant_id": ["participant_id", "participant", "prolific_pid", "prolific_id"],
+    "session_id": ["session_id", "session", "study_session_id"],
+    "native_english": ["native_english", "native_english_speaker", "english_native"],
+    "headphones": ["headphones", "wearing_headphones", "used_headphones"],
+    "heard_clearly": ["heard_clearly", "audio_heard_clearly", "could_hear_clearly"],
+    "item_id": ["item_id", "utterance_id", "utt_id", "stimulus_id", "audio_id"],
+    "condition": ["condition", "model", "system", "audio_condition"],
+    "speaker_id": ["speaker_id", "speaker", "target_speaker"],
+    "mos_rating": ["mos_rating", "rating", "mos", "score"],
+    "is_attention_check": ["is_attention_check", "attention_check", "is_attention", "check_trial"],
+    "attention_check_passed": ["attention_check_passed", "attention_passed", "check_passed", "passed"],
+    "expected_response": ["expected_response", "expected_rating", "attention_expected_response"],
+    "trial_type": ["trial_type", "type", "task_type"],
+    "item_order": ["item_order", "trial_order", "order"],
+    "audio_file": ["audio_file", "audio_path", "stimulus_path"],
+    "reference_text": ["reference_text", "reference", "target_text", "ground_truth", "text"],
+    "question": ["question", "prompt", "rating_question"],
+    "plays_used": ["plays_used", "play_count", "n_plays"],
+    "response_time_sec": ["response_time_sec", "response_time_seconds", "duration_seconds", "rt_seconds", "time_seconds"],
+    "study_elapsed_sec": ["study_elapsed_sec", "study_elapsed_seconds", "elapsed_sec", "elapsed_seconds"],
+    "shown_at": ["shown_at", "displayed_at", "started_at"],
+    "submitted_at": ["submitted_at", "completed_at", "ended_at"],
+    "gender": ["gender", "speaker_gender"],
+    "language": ["language", "lang"]
+  },
+  "attention_trial_values": ["attention", "attention_check", "check"],
+  "attention_check_include_overrides": [],
+  "incomplete_session_include_overrides": [],
+  "eligibility_field_overrides": [],
+  "technical_exclusion_overrides": [],
+  "mos_analysis": {
+    "confidence_level": 0.95
+  },
+  "visualization": {
+    "enabled": true,
+    "condition_order": ["condition_a", "condition_b"],
+    "condition_display_names": {
+      "condition_a": "Condition A",
+      "condition_b": "Condition B"
+    },
+    "speaker_order": [],
+    "speaker_display_names": {}
+  },
+  "timing_qc": {
+    "minimum_session_duration_sec": null,
+    "maximum_session_duration_sec": null,
+    "maximum_trial_response_time_sec": null
+  }
+}

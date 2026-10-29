@@ -1,3 +1,10 @@
 /results/
 /analysis_output/
-/.DS_Store
+/mos_analysis_output*/
+/mos_clmm_results*/
+.DS_Store
+/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
