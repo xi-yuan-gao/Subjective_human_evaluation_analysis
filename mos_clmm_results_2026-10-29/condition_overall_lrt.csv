@@ -1,2 +1,0 @@
-"test","full_model","reduced_model","chi_square","degrees_of_freedom","p_value"
-"Likelihood-ratio test of the overall condition effect","condition + speaker + crossed listener/item random intercepts","speaker + crossed listener/item random intercepts",1060.87894856645,3,1.11749376195727e-229

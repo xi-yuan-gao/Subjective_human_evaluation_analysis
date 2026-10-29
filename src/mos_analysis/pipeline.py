@@ -161,37 +161,6 @@ def _parse_rating(value: Any, allowed: set[int]) -> int | None:
     return rating if rating in allowed else None
 
 
-def _harmonize_legacy_item_ids(
-    rows: list[dict[str, Any]],
-    settings: dict[str, Any],
-) -> int:
-    """Append speaker IDs to selected legacy item IDs without changing raw data."""
-    if not settings.get("enabled", False):
-        for row in rows:
-            row["source_item_id"] = str(row.get("item_id", ""))
-        return 0
-
-    strategy = str(settings.get("strategy", "append_speaker_id_if_missing"))
-    if strategy != "append_speaker_id_if_missing":
-        raise ValueError(
-            "legacy_item_id_harmonization.strategy must be "
-            "'append_speaker_id_if_missing'."
-        )
-    selected_lists = {str(value) for value in settings.get("list_ids", [])}
-    changed = 0
-    for row in rows:
-        source_item_id = str(row.get("item_id", "")).strip()
-        speaker_id = str(row.get("speaker_id", "")).strip()
-        row["source_item_id"] = source_item_id
-        if selected_lists and str(row.get("list_id", "")) not in selected_lists:
-            continue
-        suffix = f"_{speaker_id}"
-        if source_item_id and speaker_id and not source_item_id.endswith(suffix):
-            row["item_id"] = f"{source_item_id}{suffix}"
-            changed += 1
-    return changed
-
-
 def _participant_key(row: dict[str, Any]) -> tuple[str, str]:
     """Return the participant/session join key."""
     return (
@@ -1523,7 +1492,6 @@ def run_mos_pipeline(
         "list_id",
         "item_order",
         "item_id",
-        "source_item_id",
         "audio_file",
         "condition",
         "speaker_id",
@@ -1545,11 +1513,6 @@ def run_mos_pipeline(
         prepared = {column: row.get(column, "") for column in output_columns}
         prepared["mos_rating"] = _parse_rating(row.get("mos_rating"), allowed_ratings)
         analysis_ready.append(prepared)
-    harmonization_settings = config.get("legacy_item_id_harmonization", {})
-    harmonized_rows = _harmonize_legacy_item_ids(
-        analysis_ready,
-        harmonization_settings,
-    )
     analysis_ready.sort(
         key=lambda row: (
             str(row["list_id"]),
@@ -1563,17 +1526,4 @@ def run_mos_pipeline(
         analysis_ready,
         output_columns,
     )
-    manifest["legacy_item_id_harmonization"] = {
-        "enabled": bool(harmonization_settings.get("enabled", False)),
-        "strategy": str(
-            harmonization_settings.get(
-                "strategy", "append_speaker_id_if_missing"
-            )
-        ),
-        "list_ids": [
-            str(value) for value in harmonization_settings.get("list_ids", [])
-        ],
-        "changed_rows": harmonized_rows,
-    }
-    _write_json(output_root / "run_manifest.json", manifest)
     return manifest

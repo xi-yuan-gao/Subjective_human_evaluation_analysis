@@ -13,7 +13,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="QC and analyze a five-list transcription experiment.")
     parser.add_argument("--results-root", type=Path, default=Path("results"), help="Directory containing pilot_transcription_experiment_list1 through list5.")
     parser.add_argument("--output-root", type=Path, default=Path("analysis_output"), help="New directory for derived reports. Raw results are never modified.")
-    parser.add_argument("--config", type=Path, default=Path("config/analysis_config.json"), help="JSON configuration file.")
+    parser.add_argument("--config", type=Path, default=Path("config/transcription_config.json"), help="JSON configuration file.")
     return parser
 
 

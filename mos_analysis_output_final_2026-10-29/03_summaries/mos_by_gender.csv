@@ -1,3 +1,0 @@
-gender,n_ratings,n_participants,n_items,n_speakers,mean_mos,sd_mos,median_mos,q1_mos,q3_mos,minimum_mos,maximum_mos,mean_plays_used,median_plays_used,mean_response_time_sec,median_response_time_sec
-F,957,40,24,3,3.201671891327064,1.1927594166986493,3.0,2.0,4.0,1.0,5.0,1.238244514106583,1.0,12.046986415882968,9.853
-M,957,40,24,3,3.212121212121212,1.1988223797806596,3.0,2.0,4.0,1.0,5.0,1.2758620689655173,1.0,12.623965517241379,10.086

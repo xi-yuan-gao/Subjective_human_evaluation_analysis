@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "transcription-analysis"
-version = "0.2.0"
-description = "Reusable QC and analysis pipeline for counterbalanced transcription experiments"
+name = "subjective-human-evaluation-analysis"
+version = "0.3.0"
+description = "Reusable QC and analysis pipelines for transcription intelligibility and MOS experiments"
 requires-python = ">=3.9"
 dependencies = []
 
@@ -19,7 +19,7 @@ mixed-effects = [
 [project.scripts]
 transcription-analysis = "transcription_analysis.cli:main"
 transcription-mixed-effects = "transcription_analysis.mixed_effects:main"
-mos-mixed-effects = "mos_analysis.mixed_effects:main"
+mos-analysis = "mos_analysis.analysis_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

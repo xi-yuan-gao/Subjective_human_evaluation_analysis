@@ -22,8 +22,8 @@ This directory contains one complete MOS descriptive-analysis run.
    lists, and rating distributions.
 4. `04_figures/` contains report-ready SVG figures and the exact plot-data CSV
    used for each figure.
-5. `run_manifest.json` records QC decisions, item-ID harmonization, validation
-   counts, confidence-interval settings, and generated files.
+5. `run_manifest.json` records QC decisions, validation counts,
+   confidence-interval settings, and generated files.
 
 The separate `run_mos_clmm.py` command uses the analysis-ready CSV for ordinal
 mixed-effects inference.

@@ -18,7 +18,8 @@ The current transcription experiment is configured for:
 - 3 independent transcriptions for every `utterance_id × condition` pair; and
 - hard eligibility requirements: `native_english=TRUE`, `headphones=TRUE`, and `heard_clearly=TRUE`.
 
-Experiment-specific assumptions, labels, aliases, exclusions, and thresholds live in `config/analysis_config.json`. The Python modules contain the reusable analysis logic.
+The reusable template is `config/transcription_config.json`. The completed
+pilot configuration is retained under `examples/configs/` as an audit record.
 
 The current MOS experiment is configured for:
 - 4 counterbalanced lists;
@@ -26,7 +27,8 @@ The current MOS experiment is configured for:
 - 4 audio conditions;
 - 10 independent ratings for every utterance_id × condition pair; and
 - hard eligibility requirements: native_english=TRUE, headphones=TRUE, and heard_clearly=TRUE.
-Experiment-specific assumptions, labels, aliases, exclusions, rating-scale definitions, and thresholds live in `config/mos_analysis_config.json`. The Python modules under `src/mos_analysis/` contain the reusable QC and analysis logic.
+The reusable template is `config/mos_config.json`. The completed pilot
+configuration is retained under `examples/configs/` as an audit record.
 
 
 ## Repository description
@@ -63,8 +65,7 @@ flowchart LR
     E -->|Blocking error| F[Write QC reports<br/>stop before export]
     E -->|QC acceptable| G[Apply documented<br/>technical exclusions]
     G --> H[Create one eligible<br/>non-attention row per rating]
-    H --> I[Temporary configured<br/>legacy ID harmonization]
-    I --> J[mos_analysis_ready.csv]
+    H --> J[mos_analysis_ready.csv]
     J --> K[MOS summaries and<br/>confidence intervals]
     K --> L[Report-ready figures]
     J --> M[Separate ordinal mixed-effects<br/>analysis in R]
@@ -79,13 +80,16 @@ pipeline.
 
 ```text
 .
-├── run_analysis.py
-├── run_mixed_effects.py
+├── run_transcription_analysis.py
+├── run_transcription_mixed_effects.py
 ├── run_mos_analysis.py
 ├── run_mos_clmm.py
 ├── config/
-│   ├── analysis_config.json
-│   └── mos_analysis_config.json
+│   ├── transcription_config.json
+│   └── mos_config.json
+├── examples/configs/
+│   ├── transcription_pilot_2026.json
+│   └── mos_pilot_2026.json
 ├── src/transcription_analysis/
 │   ├── cli.py
 │   ├── config.py
@@ -111,14 +115,15 @@ pipeline.
 │   ├── test_metrics.py
 │   ├── test_mixed_effects.py
 │   ├── test_pipeline.py
-|   ├── test_mos_pipeline.py
+│   ├── test_mos_pipeline.py
 │   └── test_timing.py
 └── results/
 ```
 
 | Module | Responsibility |
 | --- | --- |
-| `run_analysis.py`, `cli.py` | Parse paths, protect input/output boundaries, run the pipeline, and report status. |
+| `run_transcription_analysis.py`, `cli.py` | Parse transcription paths, protect input/output boundaries, run the pipeline, and report status. |
+| `run_transcription_mixed_effects.py`, `mixed_effects.py` | Run transcription condition-effect and optional selected-pair tests. |
 | `config.py` | Load the JSON configuration and validate required sections. |
 | `io_utils.py` | Read and write CSV/JSON files and preserve source provenance. |
 | `schema.py` | Resolve column aliases, create canonical fields, and identify duplicates. |
@@ -136,7 +141,8 @@ pipeline.
 | `mos_analysis/pipeline.py` | Load MOS sources, validate ratings, evaluate participant eligibility and attention checks, audit structure, apply documented exclusions, and create the analysis-ready dataset. |
 | `mos_analysis/analysis.py`, `summarize.py`, `visualize.py` | Validate prepared ratings and create MOS summaries, confidence intervals, plot-data files, and SVG figures. |
 | `run_mos_clmm.py`, `scripts/mos_ordinal_clmm.R` | Run the separate cumulative-link mixed-effects analysis on the analysis-ready dataset. |
-| `config/mos_analysis_config.json` | Define MOS lists, conditions, expected counts, rating scale, column aliases, timing thresholds, overrides, and exclusions. |
+| `config/transcription_config.json`, `config/mos_config.json` | Reusable configuration templates with aliases, expected counts, empty override lists, and display settings. |
+| `examples/configs/` | Completed-study configuration records containing experiment-specific decisions and overrides. |
 | `test_mos_pipeline.py` | Test valid MOS exports and blocking cases such as invalid ratings, failed attention checks, and failed eligibility. |
 
 ### Transcriptions - Data flow and auditability
@@ -354,7 +360,7 @@ The MOS data pass through the following stages:
 5. Participant eligibility and attention-check performance are evaluated.
 6. Duplicate ratings, expected counts, condition coverage, stimulus coverage, metadata consistency, timing, and technical exclusions are audited.
 7. Attention-check rows, excluded participants, and approved technical-exclusion rows are removed from the analysis dataset.
-8. If structural QC passes, the pipeline applies any explicitly configured legacy item-ID harmonization and writes `mos_analysis_ready.csv`.
+8. If structural QC passes, the pipeline writes `mos_analysis_ready.csv`.
 9. The same command creates descriptive summaries, confidence intervals, and figures.
 10. The prepared CSV can then be passed to the repository's separate CLMM command.
 
@@ -382,11 +388,8 @@ The pipeline also checks:
 
 Raw files remain unchanged. The exported data include `source_file` and `source_row`, allowing every prepared rating to be traced back to its original CSV row.
 
-The current pilot enables `legacy_item_id_harmonization` because List 1 used
-bare utterance IDs while Lists 2-4 already included speaker IDs. The pipeline
-preserves the original value in `source_item_id` and records the number of
-changed rows in `run_manifest.json`. Disable or remove this config block for
-future experiments that already use canonical unique item IDs.
+MOS input files must provide canonical unique `item_id` values. Historical
+one-off data migrations are not part of the reusable pipeline.
 
 #### MOS attention checks
 
@@ -461,7 +464,6 @@ participant_id
 session_id
 list_id
 item_id
-source_item_id
 condition
 speaker_id
 mos_rating
@@ -559,8 +561,12 @@ Use the configuration file corresponding to the experiment:
 
 | Experiment | Configuration |
 | --- | --- |
-| Transcription | `config/analysis_config.json` |
-| MOS | `config/mos_analysis_config.json` |
+| Transcription | `config/transcription_config.json` |
+| MOS | `config/mos_config.json` |
+
+Copy the appropriate template before adapting it for a new experiment. The
+files in `examples/configs/` document completed pilot decisions and should not
+be used as generic starting points.
 
 Use `null` only when a design requirement is not yet known. For the final analysis, use explicit expected counts so missing data become visible during QC.
 
@@ -585,10 +591,10 @@ Passing tests confirms that the implemented rules work on controlled examples. I
 ### Run the transcription analysis
 
 ```bash
-python3 run_analysis.py \
+python3 run_transcription_analysis.py \
   --results-root ./results \
   --output-root ./analysis_output \
-  --config ./config/analysis_config.json
+  --config ./config/transcription_config.json
 ```
 
 ### Run the MOS analysis
@@ -597,7 +603,7 @@ python3 run_analysis.py \
 python3 run_mos_analysis.py \
   --results-root ./results \
   --output-root ./mos_analysis_output \
-  --config ./config/mos_analysis_config.json
+  --config ./config/mos_config.json
 ```
 
 Both pipelines require separate, non-overlapping input and output directories. Use a new or empty output directory for every run. Raw result files are never modified.
@@ -620,19 +626,19 @@ python3 -m pip install -e '.[mixed-effects]'
 For the overall condition effect:
 
 ```bash
-python3 run_mixed_effects.py \
+python3 run_transcription_mixed_effects.py \
   --scores ./analysis_output/03_scores/transcription_scores.csv \
   --output-root ./analysis_output/07_mixed_effects \
-  --config ./config/analysis_config.json
+  --config ./config/transcription_config.json
 ```
 
 To compare one selected condition pair:
 
 ```bash
-python3 run_mixed_effects.py \
+python3 run_transcription_mixed_effects.py \
   --scores ./analysis_output/03_scores/transcription_scores.csv \
   --output-root ./analysis_output/07_mixed_effects_conditionA_vs_conditionB \
-  --config ./config/analysis_config.json \
+  --config ./config/transcription_config.json \
   --compare-conditions condition_A condition_B
 ```
 

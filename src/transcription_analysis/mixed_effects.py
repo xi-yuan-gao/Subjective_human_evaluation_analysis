@@ -411,7 +411,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--config",
         type=Path,
-        default=Path("config/analysis_config.json"),
+        default=Path("config/transcription_config.json"),
         help="Analysis configuration containing the expected condition levels.",
     )
     parser.add_argument(

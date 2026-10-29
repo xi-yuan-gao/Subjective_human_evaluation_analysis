@@ -29,7 +29,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--config",
         type=Path,
-        default=Path("config/mos_analysis_config.json"),
+        default=Path("config/mos_config.json"),
         help="MOS analysis JSON configuration.",
     )
     return parser

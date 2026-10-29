@@ -1,3 +1,0 @@
-[console_scripts]
-transcription-analysis = transcription_analysis.cli:main
-transcription-mixed-effects = transcription_analysis.mixed_effects:main

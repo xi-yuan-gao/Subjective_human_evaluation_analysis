@@ -161,29 +161,6 @@ class MOSPipelineTests(unittest.TestCase):
             )
             self.assertNotIn("nonmonotonic_study_elapsed_sec", timing_qc)
 
-    def test_legacy_item_id_harmonization_is_explicit_and_audited(self) -> None:
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            results = root / "results"
-            output = root / "output"
-            create_results(results)
-            settings = config()
-            settings["legacy_item_id_harmonization"] = {
-                "enabled": True,
-                "strategy": "append_speaker_id_if_missing",
-                "list_ids": ["1"],
-            }
-
-            manifest = run_mos_pipeline(results, output, settings)
-
-            with (
-                output / "02_preprocessed" / "mos_analysis_ready.csv"
-            ).open(encoding="utf-8", newline="") as handle:
-                rows = list(csv.DictReader(handle))
-            self.assertEqual(manifest["legacy_item_id_harmonization"]["changed_rows"], 4)
-            self.assertEqual(rows[0]["source_item_id"], "item_a")
-            self.assertEqual(rows[0]["item_id"], "item_a_speaker_1")
-
     def test_full_workflow_writes_qc_summaries_and_figures(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

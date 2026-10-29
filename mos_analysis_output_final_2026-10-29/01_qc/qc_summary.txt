@@ -1,1 +1,0 @@
-MOS QC PASSED: 40/40 participants are eligible and 1914 ratings were written to mos_analysis_ready.csv. Documented exceptions: 9 attention override(s), 2 incomplete-session override(s), 1 eligibility-field override(s).
