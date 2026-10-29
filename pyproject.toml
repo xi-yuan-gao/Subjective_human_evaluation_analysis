@@ -16,10 +16,10 @@ mixed-effects = [
   "scipy>=1.10,<2",
   "statsmodels>=0.14,<0.15",
 ]
-
 [project.scripts]
 transcription-analysis = "transcription_analysis.cli:main"
 transcription-mixed-effects = "transcription_analysis.mixed_effects:main"
+mos-mixed-effects = "mos_analysis.mixed_effects:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

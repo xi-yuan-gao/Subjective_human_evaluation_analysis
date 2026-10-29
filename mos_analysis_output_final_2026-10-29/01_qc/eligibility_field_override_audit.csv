@@ -1,0 +1,2 @@
+list_id,participant_id,session_id,field,raw_value,corrected_value,effective_value,override_applied,reviewed_at,reason
+3,608fb7b21c3ff9e5d850a085,be6d270d-fa03-4884-91a3-0e1c7e6fd2ca,native_english,False,True,True,True,2026-10-27,The participant confirmed that the recorded native_english=No response was a selection typo and that they are a native English speaker. Preserve the raw response and use the confirmed correction for eligibility.
