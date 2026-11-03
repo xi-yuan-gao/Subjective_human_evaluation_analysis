@@ -1,0 +1,21 @@
+condition,mos_rating,rating_count,rating_proportion,n_ratings,condition_display_name
+mantis_3.2,1,130,0.2719665271966527,478,Mantis 3.2
+mantis_3.2,2,184,0.38493723849372385,478,Mantis 3.2
+mantis_3.2,3,113,0.23640167364016737,478,Mantis 3.2
+mantis_3.2,4,51,0.10669456066945607,478,Mantis 3.2
+mantis_3.2,5,0,0.0,478,Mantis 3.2
+mantis_5.2_content_apt,1,25,0.05219206680584551,479,Mantis 5.2 content apt
+mantis_5.2_content_apt,2,112,0.23382045929018788,479,Mantis 5.2 content apt
+mantis_5.2_content_apt,3,165,0.3444676409185804,479,Mantis 5.2 content apt
+mantis_5.2_content_apt,4,144,0.30062630480167013,479,Mantis 5.2 content apt
+mantis_5.2_content_apt,5,33,0.06889352818371608,479,Mantis 5.2 content apt
+mantis_v5_w2s_baseline_E2E_apt,1,19,0.0397489539748954,478,Mantis e2e apt
+mantis_v5_w2s_baseline_E2E_apt,2,85,0.17782426778242677,478,Mantis e2e apt
+mantis_v5_w2s_baseline_E2E_apt,3,149,0.3117154811715481,478,Mantis e2e apt
+mantis_v5_w2s_baseline_E2E_apt,4,173,0.3619246861924686,478,Mantis e2e apt
+mantis_v5_w2s_baseline_E2E_apt,5,52,0.1087866108786611,478,Mantis e2e apt
+spoken_audio,1,0,0.0,479,Spoken
+spoken_audio,2,11,0.022964509394572025,479,Spoken
+spoken_audio,3,81,0.16910229645093947,479,Spoken
+spoken_audio,4,176,0.3674321503131524,479,Spoken
+spoken_audio,5,211,0.4405010438413361,479,Spoken

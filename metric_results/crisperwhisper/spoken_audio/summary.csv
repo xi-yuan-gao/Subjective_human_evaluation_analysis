@@ -1,0 +1,9 @@
+model_name,language,gender,speaker_id,metric,score,mean,n
+spoken_audio,eng,F,whisppsitevoicetalent_spkr_540,asr,wer,0.0,8
+spoken_audio,eng,F,whisppsitevoicetalent_spkr_540,asr,cer,0.0,8
+spoken_audio,eng,F,whisppsitevoicetalent_spkr_550,asr,wer,0.0,8
+spoken_audio,eng,F,whisppsitevoicetalent_spkr_550,asr,cer,0.0,8
+spoken_audio,eng,M,whisppsitevoicetalent_spkr_504,asr,wer,0.0,8
+spoken_audio,eng,M,whisppsitevoicetalent_spkr_504,asr,cer,0.0,8
+spoken_audio,eng,M,whisppsitevoicetalent_spkr_520,asr,wer,0.0,6
+spoken_audio,eng,M,whisppsitevoicetalent_spkr_520,asr,cer,0.0,6

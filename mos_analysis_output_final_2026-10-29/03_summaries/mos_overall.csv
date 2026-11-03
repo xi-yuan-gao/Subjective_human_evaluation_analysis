@@ -1,0 +1,2 @@
+n_ratings,n_participants,n_items,n_speakers,mean_mos,sd_mos,median_mos,q1_mos,q3_mos,minimum_mos,maximum_mos,mean_plays_used,median_plays_used,mean_response_time_sec,median_response_time_sec
+1914,40,48,6,3.206896551724138,1.1954935782857856,3.0,2.0,4.0,1.0,5.0,1.2570532915360502,1.0,12.335475966562173,9.993500000000001

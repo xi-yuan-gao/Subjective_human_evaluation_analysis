@@ -1,0 +1,47 @@
+{
+  "base_dir": "..",
+  "comparison_dir": "analysis_output/human_asr_comparison",
+  "output_dir": "analysis_output/human_asr_correlation",
+  "bootstrap_samples": 2000,
+  "random_seed": 20261102,
+  "allow_incomplete": false,
+  "anchor_conditions": [
+    "spoken_audio",
+    "whisper_audio"
+  ],
+  "visualization": {
+    "enabled": true,
+    "condition_order": [
+      "mantis_3.2",
+      "mantis_5.2_content_apt",
+      "mantis_v5_w2s_baseline_E2E_apt",
+      "spoken_audio",
+      "whisper_audio"
+    ],
+    "condition_display_names": {
+      "mantis_3.2": "Mantis 3.2",
+      "mantis_5.2_content_apt": "Mantis 5.2 content apt",
+      "mantis_v5_w2s_baseline_E2E_apt": "Mantis e2e apt",
+      "spoken_audio": "Spoken",
+      "whisper_audio": "Whisper"
+    },
+    "asr_order": [
+      "whisper_small",
+      "whisper_large_v3",
+      "crisperwhisper",
+      "parakeet_v3",
+      "parakeet_ctc",
+      "cohere",
+      "qwen3"
+    ],
+    "asr_display_names": {
+      "whisper_small": "Whisper small",
+      "whisper_large_v3": "Whisper large-v3",
+      "crisperwhisper": "CrisperWhisper",
+      "parakeet_v3": "Parakeet v3",
+      "parakeet_ctc": "Parakeet CTC 1.1B",
+      "cohere": "Cohere Transcribe",
+      "qwen3": "Qwen3-ASR 1.7B"
+    }
+  }
+}

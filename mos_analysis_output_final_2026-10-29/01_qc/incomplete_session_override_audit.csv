@@ -1,0 +1,3 @@
+list_id,participant_id,session_id,configured_expected_ratings,configured_observed_ratings,actual_observed_ratings,override_applied,reviewed_at,reason
+1,61698a8779cd6c1922b2a204,4824e57f-531b-4fe8-8715-c221e9d6846a,48,47,47,True,2026-10-27,One trial was not presented because of the confirmed experiment resume bug. Retain the 47 recorded MOS ratings; do not impute the missing rating.
+1,69f754628cac6e15747a0e59,d7a15777-a4e7-4b44-a7cb-26a8f685ad30,48,43,43,True,2026-10-27,Five trials were not presented because of the confirmed experiment resume bug. Retain the 43 recorded MOS ratings; do not impute the missing ratings.

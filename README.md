@@ -52,7 +52,9 @@ The main safety boundary is between QC and scoring. All QC reports are written f
 │   ├── summarize.py
 │   ├── timing.py
 │   ├── questionnaire.py
-│   └── visualize.py
+│   ├── visualize.py
+│   ├── correlation.py
+│   └── correlation_visualize.py
 ├── tests/
 │   ├── test_metrics.py
 │   ├── test_mixed_effects.py
@@ -75,6 +77,8 @@ The main safety boundary is between QC and scoring. All QC reports are written f
 | `timing.py` | Produce non-blocking session-timing review diagnostics. |
 | `questionnaire.py` | Summarize categorical responses and preserve free-text comments. |
 | `visualize.py` | Generate SVG figures and the CSV data used to draw them. |
+| `correlation.py` | Human–ASR correlation statistics (utterance- and model-level). |
+| `correlation_visualize.py` | Human–ASR correlation figures and their plot-data CSVs, configured by the `visualization` section. |
 | `tests/` | Exercise reusable code on synthetic data; tests run separately from real analysis. |
 
 ### Data flow and auditability
@@ -278,6 +282,79 @@ analysis_output/
 
 For mixed effects, `condition_effect_tests.csv` contains the omnibus WER/CER tests, `selected_condition_comparison.csv` contains the optional chosen pair, `condition_effect_summary.txt` gives the plain-language conclusions, and `model_audit.json` records the model specification, convergence, diagnostics, selected pair, and input hashes.
 
+
+### Human–ASR correlation study (Experiment A)
+
+This analysis compares human transcription error rates with seven ASR systems.
+It uses the prepared `comparison_*.csv` files in
+`analysis_output/human_asr_comparison/`; it does not recalculate WER/CER or
+repeat human-response filtering.
+
+```
+
+#### Input
+
+Every `comparison_*.csv` represents one ASR system and must contain the same
+unique `(utterance_id, condition)` recordings.
+
+| Required columns | Purpose |
+| --- | --- |
+| `utterance_id`, `condition` | Recording key |
+| `audio_file`, `speaker_id` | Recording and review context |
+| `asr_system` | ASR identifier |
+| `human_n_ratings` | Number of human transcriptions |
+| `human_mean_wer`, `human_mean_cer` | Human targets |
+| `asr_wer`, `asr_cer` | ASR scores |
+
+By default, all ASRs must have scores for the same recordings. Set
+`allow_incomplete: true` only when a shared complete-recording intersection is
+acceptable; the reduced coverage is recorded in `coverage.csv`.
+
+#### Analysis
+
+- **Utterance level — headline:** within-condition Pearson and Spearman
+  correlations for each ASR. Scores or ranks are centred within each condition
+  before pooling, so differences between condition means do not inflate the
+  result. Results are reported for all conditions and for generated conditions
+  without the spoken/Whisper anchors.
+- **Utterance level — breakdown:** separate Pearson and Spearman correlations
+  for every ASR × metric × condition.
+- **Model level:** mean WER/CER is calculated for each of the five conditions,
+  followed by descriptive Pearson, Spearman and pair-order agreement.
+- **Disagreement:** `ASR error − human mean error` is retained per recording for
+  manual review. A positive value means the ASR error is higher.
+
+Bootstrap confidence intervals resample utterances with a fixed seed.
+Model-level correlations use only five condition means and should be treated as
+descriptive. Correlation measures association, not numerical agreement or
+interchangeability.
+
+#### Main config fields
+
+| Field | Purpose |
+| --- | --- |
+| `comparison_dir` | Prepared comparison CSV directory |
+| `output_dir` | New analysis output directory |
+| `bootstrap_samples` | Bootstrap draws; use `0` to disable intervals |
+| `random_seed` | Reproducible bootstrap seed |
+| `allow_incomplete` | Permit a common complete-recording subset |
+| `anchor_conditions` | Conditions excluded from generated-only results |
+| `visualization` | Enable figures and control condition/ASR order and labels |
+
+#### Outputs
+
+| Directory/file | Contents |
+| --- | --- |
+| `02_statistics/coverage.csv` | Score availability and common coverage |
+| `02_statistics/utterance_level/` | Paired scores, per-condition correlations and headline within-condition correlations |
+| `02_statistics/model_level/` | Condition means, ranks and model-level agreement |
+| `02_statistics/disagreement/` | Recording-level discrepancies and WER summaries |
+| `03_figures/` | WER figures and the exact plot-data CSV for each figure |
+| `REPORT.md` | Concise result summary and interpretation notes |
+| `run_manifest.json` | Settings, counts, figure list and input/code hashes |
+
+
+
 ## Instructions for using the repository
 
 ### Requirements
@@ -345,7 +422,7 @@ Input and output directories must be separate and non-overlapping. The pipeline 
 
 The raw input files are never modified.
 
-#### Run the mixed-effects analysis
+### Run the mixed-effects analysis
 
 Run this after the main analysis has created `03_scores/transcription_scores.csv`. Install the optional dependencies once:
 
@@ -441,3 +518,25 @@ Review a successful run in this order:
 
 If mixed-effects analysis was run, then review `condition_effect_summary.txt`, followed by `condition_effect_tests.csv`, the optional `selected_condition_comparison.csv`, and `model_audit.json`.
 
+### Run the human asr correlation calculation
+
+```bash
+python run_human_asr_correlation.py --config config/human_asr_correlation_config.json
+```
+
+The output directory must be new or empty. Use `--output` for another run:
+
+```bash
+python run_human_asr_correlation.py \
+  --config config/human_asr_correlation_config.json \
+  --output analysis_output/human_asr_correlation_run2
+```
+
+Figures are generated by `correlation_visualize.py` through the config's
+`visualization` section. To redraw figures for a completed run without
+recomputing statistics:
+
+```bash
+PYTHONPATH=src python -m transcription_analysis.correlation_visualize \
+  --run-dir analysis_output/human_asr_correlation
+```
