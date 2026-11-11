@@ -1,0 +1,11 @@
+condition,mos_rating,rating_count,rating_proportion,n_ratings,condition_display_name
+wd-0.2-blink-3,1,53,0.11041666666666666,480,Blink 3
+wd-0.2-blink-3,2,154,0.32083333333333336,480,Blink 3
+wd-0.2-blink-3,3,168,0.35,480,Blink 3
+wd-0.2-blink-3,4,95,0.19791666666666666,480,Blink 3
+wd-0.2-blink-3,5,10,0.020833333333333332,480,Blink 3
+wd-0.2-mantis-chaos-latest,1,68,0.14166666666666666,480,Mantis Chaos (latest)
+wd-0.2-mantis-chaos-latest,2,115,0.23958333333333334,480,Mantis Chaos (latest)
+wd-0.2-mantis-chaos-latest,3,143,0.29791666666666666,480,Mantis Chaos (latest)
+wd-0.2-mantis-chaos-latest,4,102,0.2125,480,Mantis Chaos (latest)
+wd-0.2-mantis-chaos-latest,5,52,0.10833333333333334,480,Mantis Chaos (latest)

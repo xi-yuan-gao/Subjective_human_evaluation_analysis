@@ -1,0 +1,134 @@
+FULL MODEL
+Cumulative Link Mixed Model fitted with the Laplace approximation
+
+formula: mos_rating_ordered ~ condition + speaker_id + (1 | listener_id) +  
+    (1 | listener_condition) + (1 | item_id)
+data:    data
+
+ link  threshold nobs logLik   AIC     niter      max.grad cond.H 
+ logit flexible  960  -1313.15 2652.31 1608(6436) 2.25e-03 1.6e+02
+
+Random effects:
+ Groups             Name        Variance Std.Dev.
+ item_id            (Intercept) 0.12044  0.3470  
+ listener_condition (Intercept) 0.07646  0.2765  
+ listener_id        (Intercept) 0.71898  0.8479  
+Number of groups:  item_id 48,  listener_condition 40,  listener_id 20 
+
+Coefficients:
+                                         Estimate Std. Error z value Pr(>|z|)
+conditionwd-0.2-mantis-chaos-latest        0.3338     0.1481   2.253  0.02426
+speaker_idjo_09902                         0.8907     0.2743   3.247  0.00117
+speaker_idwhisppsitevoicetalent_spkr_504   1.7431     0.2771   6.290 3.17e-10
+speaker_idwhisppsitevoicetalent_spkr_520   1.3967     0.2752   5.075 3.87e-07
+speaker_idwhisppsitevoicetalent_spkr_540   1.7170     0.2763   6.214 5.17e-10
+speaker_idwhisppsitevoicetalent_spkr_550   1.4611     0.2759   5.296 1.19e-07
+                                            
+conditionwd-0.2-mantis-chaos-latest      *  
+speaker_idjo_09902                       ** 
+speaker_idwhisppsitevoicetalent_spkr_504 ***
+speaker_idwhisppsitevoicetalent_spkr_520 ***
+speaker_idwhisppsitevoicetalent_spkr_540 ***
+speaker_idwhisppsitevoicetalent_spkr_550 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Threshold coefficients:
+    Estimate Std. Error z value
+1|2  -1.0132     0.2914  -3.477
+2|3   0.9202     0.2890   3.184
+3|4   2.6154     0.2994   8.735
+4|5   4.5066     0.3267  13.794
+
+REDUCED MODEL
+Cumulative Link Mixed Model fitted with the Laplace approximation
+
+formula: 
+mos_rating_ordered ~ speaker_id + (1 | listener_id) + (1 | listener_condition) +  
+    (1 | item_id)
+data:    data
+
+ link  threshold nobs logLik   AIC     niter      max.grad cond.H 
+ logit flexible  960  -1315.42 2654.83 1055(4224) 7.56e-04 1.5e+02
+
+Random effects:
+ Groups             Name        Variance Std.Dev.
+ item_id            (Intercept) 0.1209   0.3477  
+ listener_condition (Intercept) 0.1337   0.3657  
+ listener_id        (Intercept) 0.6895   0.8304  
+Number of groups:  item_id 48,  listener_condition 40,  listener_id 20 
+
+Coefficients:
+                                         Estimate Std. Error z value Pr(>|z|)
+speaker_idjo_09902                         0.8939     0.2739   3.264   0.0011
+speaker_idwhisppsitevoicetalent_spkr_504   1.7489     0.2769   6.316 2.68e-10
+speaker_idwhisppsitevoicetalent_spkr_520   1.3952     0.2750   5.073 3.92e-07
+speaker_idwhisppsitevoicetalent_spkr_540   1.7259     0.2761   6.252 4.05e-10
+speaker_idwhisppsitevoicetalent_spkr_550   1.4677     0.2760   5.319 1.05e-07
+                                            
+speaker_idjo_09902                       ** 
+speaker_idwhisppsitevoicetalent_spkr_504 ***
+speaker_idwhisppsitevoicetalent_spkr_520 ***
+speaker_idwhisppsitevoicetalent_spkr_540 ***
+speaker_idwhisppsitevoicetalent_spkr_550 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Threshold coefficients:
+    Estimate Std. Error z value
+1|2  -1.1769     0.2824  -4.168
+2|3   0.7618     0.2795   2.726
+3|4   2.4565     0.2890   8.499
+4|5   4.3439     0.3158  13.755
+
+LIKELIHOOD-RATIO TABLE
+              no.par      AIC    logLik  LR.stat df Pr(>Chisq)
+reduced_model     12 2654.834 -1315.417       NA NA         NA
+full_model        13 2652.309 -1313.154 4.524672  1 0.03340948
+
+RANDOM EFFECT VARIANCES
+$item_id
+            (Intercept)
+(Intercept)   0.1204378
+attr(,"stddev")
+(Intercept) 
+  0.3470415 
+
+$listener_condition
+            (Intercept)
+(Intercept)  0.07646291
+attr(,"stddev")
+(Intercept) 
+  0.2765193 
+
+$listener_id
+            (Intercept)
+(Intercept)   0.7189829
+attr(,"stddev")
+(Intercept) 
+  0.8479286 
+
+
+SESSION INFORMATION
+R version 4.4.2 (2024-10-31)
+Platform: aarch64-apple-darwin20.0.0
+Running under: macOS 26.6.2
+
+Matrix products: default
+BLAS/LAPACK: /Users/xiyuan/miniconda3/envs/subjective_human_eval/lib/libopenblas.0.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Europe/Amsterdam
+tzcode source: system (macOS)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] MASS_7.3-66         compiler_4.4.2      emmeans_2.0.4      
+ [4] Matrix_1.7-6        cli_3.6.6           estimability_2.0.0 
+ [7] tools_4.4.2         mvtnorm_1.4-1       nlme_3.1-170       
+[10] ucminf_1.2.3        grid_4.4.2          ordinal_2026.7-26  
+[13] numDeriv_2016.8-1.1 rlang_1.3.0         lattice_0.23-1     

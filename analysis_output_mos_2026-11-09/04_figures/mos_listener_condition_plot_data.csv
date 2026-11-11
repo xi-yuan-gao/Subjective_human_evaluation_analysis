@@ -1,0 +1,41 @@
+participant_id,session_id,list_id,condition,condition_display_name,n_ratings,listener_mean_mos
+58ca1be053f3e70001bd2845,d191190a-5fa0-485c-bf36-5141a04c76f7,1,wd-0.2-blink-3,Blink 3,24,2.875
+5f392fae9168cc472f0468f6,a486c2ac-4a10-4629-8529-93daccc4e69b,1,wd-0.2-blink-3,Blink 3,24,3.2083333333333335
+5ff41506eed16daa2c6c6ebc,64b49664-249b-48eb-8e5c-873f12fc1e1b,1,wd-0.2-blink-3,Blink 3,24,2.625
+602cf4568083d86318913385,09b2537f-be4c-45b7-9c2f-b9cdf314a4d7,2,wd-0.2-blink-3,Blink 3,24,3.0
+60a2df32808ac76c056b37b9,5bb31bfd-4540-4c14-845c-85e59351b03f,1,wd-0.2-blink-3,Blink 3,24,2.625
+636d39168fe0bc0570ee8da0,a2d1bdb3-b070-4d1d-a045-26d8d013410f,1,wd-0.2-blink-3,Blink 3,24,2.2083333333333335
+66854a3fe3ee6c65ff1c3952,4c76bdaa-83de-4d0a-9846-f819aea07317,2,wd-0.2-blink-3,Blink 3,24,3.1666666666666665
+66b77ee766f2916fff125c78,672c28e1-5e2f-405d-8f28-36ed2e5c89b6,2,wd-0.2-blink-3,Blink 3,24,2.6666666666666665
+66c20b634a3b292d25596fbc,01f4e888-ce11-4a42-ab20-4d909e5e6cfb,2,wd-0.2-blink-3,Blink 3,24,2.6666666666666665
+66cc6eb364154a51d4d44eb1,2781cd97-8ee3-44cd-9209-ad5a4350e1fe,1,wd-0.2-blink-3,Blink 3,24,3.6666666666666665
+6719666f4e37ff096c23d6ca,b1f56bb5-a027-458f-863f-a4ad9966bfab,1,wd-0.2-blink-3,Blink 3,24,2.8333333333333335
+67657ea1ad7558bf427f3a22,93c57edf-2d6f-4d2d-b7f2-74ad8ee408a7,2,wd-0.2-blink-3,Blink 3,24,2.3333333333333335
+69ebf7ef9b1f438ecd629727,3e8a167e-d37e-4a45-881f-91e0588ac3ec,2,wd-0.2-blink-3,Blink 3,24,3.25
+6a0643def96c580502e0624d,dd52f3a8-b75b-4a74-a422-4db3bb32c333,2,wd-0.2-blink-3,Blink 3,24,2.5416666666666665
+6a1a4eb9844cc3dbe55a2ae0,8ecb1ce4-5a24-498d-95e5-a6b179546cae,2,wd-0.2-blink-3,Blink 3,24,2.0416666666666665
+6a1c174ff8c3ad6e879ce78b,d309be10-e9c1-49d0-89c3-37674da24c74,1,wd-0.2-blink-3,Blink 3,24,1.7916666666666667
+6a22eaedd2c5b95c83582fdb,e7cb5073-0923-456a-88aa-2c09c158eef7,2,wd-0.2-blink-3,Blink 3,24,2.9166666666666665
+6a267fe4c68b0b7496434f09,a3b2127a-64ac-4c55-b4d7-5db241640d5a,2,wd-0.2-blink-3,Blink 3,24,2.7916666666666665
+6acd224c7a68937c0a8688d1,5a3f6881-ca29-42ea-b0c3-717f45c81ce0,1,wd-0.2-blink-3,Blink 3,24,2.1666666666666665
+6adf408baOba4ace29638ee8,70381e45-d073-414e-9b10-598836414f79,1,wd-0.2-blink-3,Blink 3,24,2.5833333333333335
+58ca1be053f3e70001bd2845,d191190a-5fa0-485c-bf36-5141a04c76f7,1,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,2.625
+5f392fae9168cc472f0468f6,a486c2ac-4a10-4629-8529-93daccc4e69b,1,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,3.5416666666666665
+5ff41506eed16daa2c6c6ebc,64b49664-249b-48eb-8e5c-873f12fc1e1b,1,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,2.5416666666666665
+602cf4568083d86318913385,09b2537f-be4c-45b7-9c2f-b9cdf314a4d7,2,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,3.4166666666666665
+60a2df32808ac76c056b37b9,5bb31bfd-4540-4c14-845c-85e59351b03f,1,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,3.4583333333333335
+636d39168fe0bc0570ee8da0,a2d1bdb3-b070-4d1d-a045-26d8d013410f,1,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,2.375
+66854a3fe3ee6c65ff1c3952,4c76bdaa-83de-4d0a-9846-f819aea07317,2,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,3.3333333333333335
+66b77ee766f2916fff125c78,672c28e1-5e2f-405d-8f28-36ed2e5c89b6,2,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,2.5833333333333335
+66c20b634a3b292d25596fbc,01f4e888-ce11-4a42-ab20-4d909e5e6cfb,2,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,2.9583333333333335
+66cc6eb364154a51d4d44eb1,2781cd97-8ee3-44cd-9209-ad5a4350e1fe,1,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,3.5416666666666665
+6719666f4e37ff096c23d6ca,b1f56bb5-a027-458f-863f-a4ad9966bfab,1,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,2.7916666666666665
+67657ea1ad7558bf427f3a22,93c57edf-2d6f-4d2d-b7f2-74ad8ee408a7,2,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,2.9166666666666665
+69ebf7ef9b1f438ecd629727,3e8a167e-d37e-4a45-881f-91e0588ac3ec,2,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,3.1666666666666665
+6a0643def96c580502e0624d,dd52f3a8-b75b-4a74-a422-4db3bb32c333,2,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,3.0
+6a1a4eb9844cc3dbe55a2ae0,8ecb1ce4-5a24-498d-95e5-a6b179546cae,2,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,1.7916666666666667
+6a1c174ff8c3ad6e879ce78b,d309be10-e9c1-49d0-89c3-37674da24c74,1,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,1.7083333333333333
+6a22eaedd2c5b95c83582fdb,e7cb5073-0923-456a-88aa-2c09c158eef7,2,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,3.0
+6a267fe4c68b0b7496434f09,a3b2127a-64ac-4c55-b4d7-5db241640d5a,2,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,3.625
+6acd224c7a68937c0a8688d1,5a3f6881-ca29-42ea-b0c3-717f45c81ce0,1,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,2.7916666666666665
+6adf408baOba4ace29638ee8,70381e45-d073-414e-9b10-598836414f79,1,wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),24,2.9583333333333335

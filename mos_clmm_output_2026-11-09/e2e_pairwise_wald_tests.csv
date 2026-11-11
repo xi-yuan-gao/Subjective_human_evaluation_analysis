@@ -1,0 +1,2 @@
+"reference_condition","comparison_condition","contrast_direction","estimated_log_odds_difference","standard_error","z_statistic","cumulative_odds_ratio","odds_ratio_ci_95_lower","odds_ratio_ci_95_upper","p_value","test"
+"wd-0.2-blink-3","wd-0.2-mantis-chaos-latest","reference condition minus comparison condition",-0.333777390937485,0.148143921528788,-2.25306166795796,0.716213200031646,0.535725089793171,0.957508538749997,0.024255260950944,"Wald z-test on the cumulative-logit scale"

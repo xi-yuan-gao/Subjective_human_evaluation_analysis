@@ -1,0 +1,1 @@
+QC PASSED: 6/6 required participant slots are filled; 60/60 utterance-condition pairs are complete; 4 manual attention-check overrides were applied; 2 included sessions need timing review.

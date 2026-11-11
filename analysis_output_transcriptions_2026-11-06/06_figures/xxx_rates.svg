@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="450" viewBox="0 0 1040 450" role="img" aria-labelledby="title desc">
+<title id="title">Explicit unintelligibility markers by condition</title>
+<desc id="desc">Lower values indicate fewer transcription errors or fewer explicit unintelligible spans.</desc>
+<rect width="1040" height="450" fill="#FFFFFF"/>
+<text x="35.0" y="34.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="500" fill="#1F2937">Explicit unintelligibility markers by condition</text>
+<text x="35.0" y="58.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#6B7280">Share of responses containing any xxx (partial) or consisting only of xxx (complete unintelligibility). Whiskers = listener-clustered 95% CIs.</text>
+<circle cx="41" cy="84" r="6" fill="#7B61A8"/>
+<text x="53.0" y="88.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#1F2937">Any xxx</text>
+<rect x="135" y="78" width="11" height="11" fill="#D55E00"/>
+<text x="153.0" y="88.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#1F2937">Whole-response xxx</text>
+<line x1="230.0" y1="120.0" x2="230.0" y2="380.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="230.0" y="398.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">0.0%</text>
+<line x1="300.0" y1="120.0" x2="300.0" y2="380.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="300.0" y="398.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">2.5%</text>
+<line x1="370.0" y1="120.0" x2="370.0" y2="380.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="370.0" y="398.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">5.0%</text>
+<line x1="440.0" y1="120.0" x2="440.0" y2="380.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="440.0" y="398.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">7.5%</text>
+<line x1="510.0" y1="120.0" x2="510.0" y2="380.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="510.0" y="398.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">10.0%</text>
+<line x1="580.0" y1="120.0" x2="580.0" y2="380.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="580.0" y="398.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">12.5%</text>
+<line x1="650.0" y1="120.0" x2="650.0" y2="380.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="650.0" y="398.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">15.0%</text>
+<text x="440.0" y="424.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#6B7280">Share of transcription responses</text>
+<text x="35.0" y="183.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#1F2937">Blink 3</text>
+<text x="35.0" y="200.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">7 xxx tokens in 90 responses</text>
+<line x1="230.0" y1="171.0" x2="447.8" y2="171.0" stroke="#E5E7EB" stroke-width="8"/>
+<line x1="323.3" y1="171.0" x2="603.3" y2="171.0" stroke="#7B61A8" stroke-width="1.8"/>
+<line x1="323.3" y1="167.0" x2="323.3" y2="175.0" stroke="#7B61A8" stroke-width="1.8"/>
+<line x1="603.3" y1="167.0" x2="603.3" y2="175.0" stroke="#7B61A8" stroke-width="1.8"/>
+<circle cx="447.8" cy="171.0" r="6" fill="#7B61A8"/>
+<text x="613.3" y="175.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#7B61A8">Any xxx: 7/90 (7.8%, 95% CI 3.3–13.3%)</text>
+<line x1="230.0" y1="199.0" x2="261.1" y2="199.0" stroke="#E5E7EB" stroke-width="8"/>
+<line x1="230.0" y1="199.0" x2="323.3" y2="199.0" stroke="#D55E00" stroke-width="1.8"/>
+<line x1="230.0" y1="195.0" x2="230.0" y2="203.0" stroke="#D55E00" stroke-width="1.8"/>
+<line x1="323.3" y1="195.0" x2="323.3" y2="203.0" stroke="#D55E00" stroke-width="1.8"/>
+<rect x="255.6" y="193.5" width="11" height="11" fill="#D55E00"/>
+<text x="333.3" y="203.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#D55E00">Whole-response xxx: 1/90 (1.1%, 95% CI 0.0–3.3%)</text>
+<text x="35.0" y="313.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#1F2937">Mantis Chaos (latest)</text>
+<text x="35.0" y="330.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">7 xxx tokens in 90 responses</text>
+<line x1="230.0" y1="301.0" x2="416.7" y2="301.0" stroke="#E5E7EB" stroke-width="8"/>
+<line x1="292.2" y1="301.0" x2="572.2" y2="301.0" stroke="#7B61A8" stroke-width="1.8"/>
+<line x1="292.2" y1="297.0" x2="292.2" y2="305.0" stroke="#7B61A8" stroke-width="1.8"/>
+<line x1="572.2" y1="297.0" x2="572.2" y2="305.0" stroke="#7B61A8" stroke-width="1.8"/>
+<circle cx="416.7" cy="301.0" r="6" fill="#7B61A8"/>
+<text x="582.2" y="305.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#7B61A8">Any xxx: 6/90 (6.7%, 95% CI 2.2–12.2%)</text>
+<line x1="230.0" y1="329.0" x2="230.0" y2="329.0" stroke="#E5E7EB" stroke-width="8"/>
+<line x1="230.0" y1="329.0" x2="230.0" y2="329.0" stroke="#D55E00" stroke-width="1.8"/>
+<line x1="230.0" y1="325.0" x2="230.0" y2="333.0" stroke="#D55E00" stroke-width="1.8"/>
+<line x1="230.0" y1="325.0" x2="230.0" y2="333.0" stroke="#D55E00" stroke-width="1.8"/>
+<rect x="224.5" y="323.5" width="11" height="11" fill="#D55E00"/>
+<text x="240.0" y="333.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#D55E00">Whole-response xxx: 0/90 (0.0%, 95% CI 0.0–0.0%)</text>
+</svg>

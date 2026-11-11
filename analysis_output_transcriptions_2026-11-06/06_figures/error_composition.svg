@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1610" height="540" viewBox="0 0 1610 540" role="img" aria-labelledby="title desc">
+<title id="title">Word and character error composition by condition</title>
+<desc id="desc">Lower values indicate fewer transcription errors or fewer explicit unintelligible spans.</desc>
+<rect width="1610" height="540" fill="#FFFFFF"/>
+<text x="35.0" y="34.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="500" fill="#1F2937">Error composition by condition</text>
+<text x="35.0" y="58.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#6B7280">Bars stack mean substitution, deletion and insertion rates (they sum to the mean error rate). Black bar above = 95% CI of the total; brackets = listener-clustered 95% CIs. Lower is better.</text>
+<rect x="35" y="76" width="12" height="12" fill="#0072B2"/>
+<text x="53.0" y="87.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#1F2937">Substitutions</text>
+<rect x="155" y="76" width="12" height="12" fill="#D55E00"/>
+<text x="173.0" y="87.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#1F2937">Deletions</text>
+<rect x="275" y="76" width="12" height="12" fill="#009E73"/>
+<text x="293.0" y="87.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#1F2937">Insertions</text>
+<text x="35.0" y="112.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="500" fill="#1F2937">Word error rate</text>
+<line x1="205.0" y1="130.0" x2="205.0" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="205.0" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">0%</text>
+<line x1="305.0" y1="130.0" x2="305.0" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="305.0" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">5%</text>
+<line x1="405.0" y1="130.0" x2="405.0" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="405.0" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">10%</text>
+<line x1="505.0" y1="130.0" x2="505.0" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="505.0" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">15%</text>
+<line x1="605.0" y1="130.0" x2="605.0" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="605.0" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">20%</text>
+<text x="405.0" y="514.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#6B7280">Mean error rate</text>
+<text x="35.0" y="179.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#1F2937">Blink 3</text>
+<rect x="205.0" y="163.0" width="167.5" height="24" fill="#0072B2"/>
+<text x="288.7" y="179.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF">8.4%</text>
+<rect x="372.5" y="163.0" width="74.2" height="24" fill="#D55E00"/>
+<text x="409.6" y="179.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF">3.7%</text>
+<rect x="446.7" y="163.0" width="20.5" height="24" fill="#009E73"/>
+<line x1="373.1" y1="153.0" x2="552.2" y2="153.0" stroke="#1F2937" stroke-width="1.8"/>
+<line x1="373.1" y1="149.0" x2="373.1" y2="157.0" stroke="#1F2937" stroke-width="1.8"/>
+<line x1="552.2" y1="149.0" x2="552.2" y2="157.0" stroke="#1F2937" stroke-width="1.8"/>
+<text x="475.2" y="179.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#1F2937">Total 13.1% [8.4–17.4]</text>
+<rect x="205" y="200.0" width="10" height="10" fill="#0072B2"/>
+<text x="221.0" y="209.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Substitutions 8.4% [5.7–10.7] · 64% of errors</text>
+<rect x="205" y="217.0" width="10" height="10" fill="#D55E00"/>
+<text x="221.0" y="226.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Deletions 3.7% [1.2–7.1] · 28% of errors</text>
+<rect x="205" y="234.0" width="10" height="10" fill="#009E73"/>
+<text x="221.0" y="243.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Insertions 1.0% [0.6–1.5] · 8% of errors</text>
+<text x="35.0" y="354.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#1F2937">Mantis Chaos (latest)</text>
+<rect x="205.0" y="338.0" width="183.5" height="24" fill="#0072B2"/>
+<text x="296.7" y="354.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF">9.2%</text>
+<rect x="388.5" y="338.0" width="36.1" height="24" fill="#D55E00"/>
+<rect x="424.6" y="338.0" width="14.1" height="24" fill="#009E73"/>
+<line x1="318.8" y1="328.0" x2="556.1" y2="328.0" stroke="#1F2937" stroke-width="1.8"/>
+<line x1="318.8" y1="324.0" x2="318.8" y2="332.0" stroke="#1F2937" stroke-width="1.8"/>
+<line x1="556.1" y1="324.0" x2="556.1" y2="332.0" stroke="#1F2937" stroke-width="1.8"/>
+<text x="446.7" y="354.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#1F2937">Total 11.7% [5.7–17.6]</text>
+<rect x="205" y="375.0" width="10" height="10" fill="#0072B2"/>
+<text x="221.0" y="384.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Substitutions 9.2% [4.7–13.6] · 79% of errors</text>
+<rect x="205" y="392.0" width="10" height="10" fill="#D55E00"/>
+<text x="221.0" y="401.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Deletions 1.8% [0.7–3.4] · 15% of errors</text>
+<rect x="205" y="409.0" width="10" height="10" fill="#009E73"/>
+<text x="221.0" y="418.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Insertions 0.7% [0.1–1.4] · 6% of errors</text>
+<text x="805.0" y="112.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="500" fill="#1F2937">Character error rate</text>
+<line x1="975.0" y1="130.0" x2="975.0" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="975.0" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">0.0%</text>
+<line x1="1041.7" y1="130.0" x2="1041.7" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1041.7" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">2.5%</text>
+<line x1="1108.3" y1="130.0" x2="1108.3" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1108.3" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">5.0%</text>
+<line x1="1175.0" y1="130.0" x2="1175.0" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1175.0" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">7.5%</text>
+<line x1="1241.7" y1="130.0" x2="1241.7" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1241.7" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">10.0%</text>
+<line x1="1308.3" y1="130.0" x2="1308.3" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1308.3" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">12.5%</text>
+<line x1="1375.0" y1="130.0" x2="1375.0" y2="470.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1375.0" y="488.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">15.0%</text>
+<text x="1175.0" y="514.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#6B7280">Mean error rate</text>
+<text x="805.0" y="179.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#1F2937">Blink 3</text>
+<rect x="975.0" y="163.0" width="82.7" height="24" fill="#0072B2"/>
+<text x="1016.3" y="179.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF">3.1%</text>
+<rect x="1057.7" y="163.0" width="95.2" height="24" fill="#D55E00"/>
+<text x="1105.3" y="179.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF">3.6%</text>
+<rect x="1152.9" y="163.0" width="20.7" height="24" fill="#009E73"/>
+<line x1="1078.5" y1="153.0" x2="1279.4" y2="153.0" stroke="#1F2937" stroke-width="1.8"/>
+<line x1="1078.5" y1="149.0" x2="1078.5" y2="157.0" stroke="#1F2937" stroke-width="1.8"/>
+<line x1="1279.4" y1="149.0" x2="1279.4" y2="157.0" stroke="#1F2937" stroke-width="1.8"/>
+<text x="1181.7" y="179.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#1F2937">Total 7.4% [3.9–11.4]</text>
+<rect x="975" y="200.0" width="10" height="10" fill="#0072B2"/>
+<text x="991.0" y="209.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Substitutions 3.1% [1.8–4.3] · 42% of errors</text>
+<rect x="975" y="217.0" width="10" height="10" fill="#D55E00"/>
+<text x="991.0" y="226.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Deletions 3.6% [1.4–6.9] · 48% of errors</text>
+<rect x="975" y="234.0" width="10" height="10" fill="#009E73"/>
+<text x="991.0" y="243.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Insertions 0.8% [0.4–1.4] · 10% of errors</text>
+<text x="805.0" y="354.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#1F2937">Mantis Chaos (latest)</text>
+<rect x="975.0" y="338.0" width="92.9" height="24" fill="#0072B2"/>
+<text x="1021.4" y="354.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF">3.5%</text>
+<rect x="1067.9" y="338.0" width="72.4" height="24" fill="#D55E00"/>
+<text x="1104.1" y="354.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="600" fill="#FFFFFF">2.7%</text>
+<rect x="1140.3" y="338.0" width="12.6" height="24" fill="#009E73"/>
+<line x1="1066.7" y1="328.0" x2="1240.2" y2="328.0" stroke="#1F2937" stroke-width="1.8"/>
+<line x1="1066.7" y1="324.0" x2="1066.7" y2="332.0" stroke="#1F2937" stroke-width="1.8"/>
+<line x1="1240.2" y1="324.0" x2="1240.2" y2="332.0" stroke="#1F2937" stroke-width="1.8"/>
+<text x="1160.9" y="354.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#1F2937">Total 6.7% [3.4–9.9]</text>
+<rect x="975" y="375.0" width="10" height="10" fill="#0072B2"/>
+<text x="991.0" y="384.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Substitutions 3.5% [1.7–5.4] · 52% of errors</text>
+<rect x="975" y="392.0" width="10" height="10" fill="#D55E00"/>
+<text x="991.0" y="401.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Deletions 2.7% [1.5–4.1] · 41% of errors</text>
+<rect x="975" y="409.0" width="10" height="10" fill="#009E73"/>
+<text x="991.0" y="418.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#1F2937">Insertions 0.5% [0.2–0.8] · 7% of errors</text>
+</svg>

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="424" viewBox="0 0 1520 424" role="img" aria-labelledby="title desc">
+<title id="title">Error rates by speaker gender and condition</title>
+<desc id="desc">Lower values indicate fewer transcription errors or fewer explicit unintelligible spans.</desc>
+<rect width="1520" height="424" fill="#FFFFFF"/>
+<text x="35.0" y="34.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="500" fill="#1F2937">Error rates by speaker gender and condition</text>
+<text x="35.0" y="58.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#6B7280">Points are mean error rates; whiskers and [brackets] are listener-clustered 95% bootstrap CIs; n = transcriptions per cell. Lower is better.</text>
+<circle cx="40" cy="84" r="5" fill="#0072B2"/>
+<text x="51.0" y="88.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#1F2937">Blink 3</text>
+<circle cx="119" cy="84" r="5" fill="#D55E00"/>
+<text x="130.0" y="88.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#1F2937">Mantis Chaos (latest)</text>
+<text x="35.0" y="126.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="500" fill="#1F2937">Word error rate</text>
+<line x1="175.0" y1="150.0" x2="175.0" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="175.0" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">0%</text>
+<line x1="255.0" y1="150.0" x2="255.0" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="255.0" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">5%</text>
+<line x1="335.0" y1="150.0" x2="335.0" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="335.0" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">10%</text>
+<line x1="415.0" y1="150.0" x2="415.0" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="415.0" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">15%</text>
+<line x1="495.0" y1="150.0" x2="495.0" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="495.0" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">20%</text>
+<line x1="575.0" y1="150.0" x2="575.0" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="575.0" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">25%</text>
+<text x="375.0" y="398.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#6B7280">Mean error rate</text>
+<text x="35.0" y="205.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#1F2937">Female speakers</text>
+<line x1="274.9" y1="188.0" x2="467.4" y2="188.0" stroke="#0072B2" stroke-width="2"/>
+<line x1="274.9" y1="184.0" x2="274.9" y2="192.0" stroke="#0072B2" stroke-width="2"/>
+<line x1="467.4" y1="184.0" x2="467.4" y2="192.0" stroke="#0072B2" stroke-width="2"/>
+<circle cx="373.4" cy="188.0" r="5" fill="#0072B2"/>
+<text x="475.4" y="192.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#0072B2">12.4% [6.2–18.3]  n=48</text>
+<line x1="252.8" y1="214.0" x2="495.6" y2="214.0" stroke="#D55E00" stroke-width="2"/>
+<line x1="252.8" y1="210.0" x2="252.8" y2="218.0" stroke="#D55E00" stroke-width="2"/>
+<line x1="495.6" y1="210.0" x2="495.6" y2="218.0" stroke="#D55E00" stroke-width="2"/>
+<circle cx="373.6" cy="214.0" r="5" fill="#D55E00"/>
+<text x="503.6" y="218.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#D55E00">12.4% [4.9–20.0]  n=48</text>
+<text x="35.0" y="307.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#1F2937">Male speakers</text>
+<line x1="35.0" y1="252.0" x2="740.0" y2="252.0" stroke="#E5E7EB" stroke-width="1"/>
+<line x1="322.4" y1="290.0" x2="477.6" y2="290.0" stroke="#0072B2" stroke-width="2"/>
+<line x1="322.4" y1="286.0" x2="322.4" y2="294.0" stroke="#0072B2" stroke-width="2"/>
+<line x1="477.6" y1="286.0" x2="477.6" y2="294.0" stroke="#0072B2" stroke-width="2"/>
+<circle cx="397.8" cy="290.0" r="5" fill="#0072B2"/>
+<text x="485.6" y="294.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#0072B2">13.9% [9.2–18.9]  n=42</text>
+<line x1="271.2" y1="316.0" x2="434.7" y2="316.0" stroke="#D55E00" stroke-width="2"/>
+<line x1="271.2" y1="312.0" x2="271.2" y2="320.0" stroke="#D55E00" stroke-width="2"/>
+<line x1="434.7" y1="312.0" x2="434.7" y2="320.0" stroke="#D55E00" stroke-width="2"/>
+<circle cx="348.7" cy="316.0" r="5" fill="#D55E00"/>
+<text x="442.7" y="320.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#D55E00">10.9% [6.0–16.2]  n=42</text>
+<text x="770.0" y="126.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="500" fill="#1F2937">Character error rate</text>
+<line x1="910.0" y1="150.0" x2="910.0" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="910.0" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">0.0%</text>
+<line x1="976.7" y1="150.0" x2="976.7" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="976.7" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">2.5%</text>
+<line x1="1043.3" y1="150.0" x2="1043.3" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1043.3" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">5.0%</text>
+<line x1="1110.0" y1="150.0" x2="1110.0" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1110.0" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">7.5%</text>
+<line x1="1176.7" y1="150.0" x2="1176.7" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1176.7" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">10.0%</text>
+<line x1="1243.3" y1="150.0" x2="1243.3" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1243.3" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">12.5%</text>
+<line x1="1310.0" y1="150.0" x2="1310.0" y2="354.0" stroke="#E5E7EB" stroke-width="1"/>
+<text x="1310.0" y="372.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#6B7280">15.0%</text>
+<text x="1110.0" y="398.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#6B7280">Mean error rate</text>
+<text x="770.0" y="205.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#1F2937">Female speakers</text>
+<line x1="981.8" y1="188.0" x2="1221.7" y2="188.0" stroke="#0072B2" stroke-width="2"/>
+<line x1="981.8" y1="184.0" x2="981.8" y2="192.0" stroke="#0072B2" stroke-width="2"/>
+<line x1="1221.7" y1="184.0" x2="1221.7" y2="192.0" stroke="#0072B2" stroke-width="2"/>
+<circle cx="1096.5" cy="188.0" r="5" fill="#0072B2"/>
+<text x="1229.7" y="192.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#0072B2">7.0% [2.7–11.7]  n=48</text>
+<line x1="980.9" y1="214.0" x2="1206.9" y2="214.0" stroke="#D55E00" stroke-width="2"/>
+<line x1="980.9" y1="210.0" x2="980.9" y2="218.0" stroke="#D55E00" stroke-width="2"/>
+<line x1="1206.9" y1="210.0" x2="1206.9" y2="218.0" stroke="#D55E00" stroke-width="2"/>
+<circle cx="1095.8" cy="214.0" r="5" fill="#D55E00"/>
+<text x="1214.9" y="218.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#D55E00">7.0% [2.7–11.1]  n=48</text>
+<text x="770.0" y="307.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#1F2937">Male speakers</text>
+<line x1="770.0" y1="252.0" x2="1475.0" y2="252.0" stroke="#E5E7EB" stroke-width="1"/>
+<line x1="1027.4" y1="290.0" x2="1242.9" y2="290.0" stroke="#0072B2" stroke-width="2"/>
+<line x1="1027.4" y1="286.0" x2="1027.4" y2="294.0" stroke="#0072B2" stroke-width="2"/>
+<line x1="1242.9" y1="286.0" x2="1242.9" y2="294.0" stroke="#0072B2" stroke-width="2"/>
+<circle cx="1122.5" cy="290.0" r="5" fill="#0072B2"/>
+<text x="1250.9" y="294.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#0072B2">8.0% [4.4–12.5]  n=42</text>
+<line x1="994.5" y1="316.0" x2="1173.2" y2="316.0" stroke="#D55E00" stroke-width="2"/>
+<line x1="994.5" y1="312.0" x2="994.5" y2="320.0" stroke="#D55E00" stroke-width="2"/>
+<line x1="1173.2" y1="312.0" x2="1173.2" y2="320.0" stroke="#D55E00" stroke-width="2"/>
+<circle cx="1078.9" cy="316.0" r="5" fill="#D55E00"/>
+<text x="1181.2" y="320.0" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="500" fill="#D55E00">6.3% [3.2–9.9]  n=42</text>
+</svg>

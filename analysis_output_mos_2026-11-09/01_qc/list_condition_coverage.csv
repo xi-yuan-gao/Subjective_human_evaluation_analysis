@@ -1,0 +1,5 @@
+list_id,condition,rating_count,present
+1,wd-0.2-blink-3,240,True
+1,wd-0.2-mantis-chaos-latest,240,True
+2,wd-0.2-blink-3,240,True
+2,wd-0.2-mantis-chaos-latest,240,True
