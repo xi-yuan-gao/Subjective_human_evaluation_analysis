@@ -20,6 +20,7 @@ REQUIRED_MAIN_FIELDS = (
 TRUE_VALUES = {"true", "1", "yes", "y", "t"}
 FALSE_VALUES = {"false", "0", "no", "n", "f"}
 ELIGIBILITY_FIELDS = ("native_english", "headphones", "heard_clearly")
+PRESCREEN_FIELDS = ("native_english", "headphones")
 
 OUTPUT_GUIDE = """# MOS analysis output guide
 
@@ -462,6 +463,12 @@ def run_mos_pipeline(
     output_root.mkdir(parents=True, exist_ok=True)
     (output_root / "OUTPUT_GUIDE.md").write_text(OUTPUT_GUIDE, encoding="utf-8")
 
+    # Set "prescreen_check": false in the config when native language and
+    # headphones are already screened in Prolific / the test interface.
+    # The prescreen CSV is still required either way.
+    prescreen_check = config.get("prescreen_check", True)
+    if not isinstance(prescreen_check, bool):
+        raise ValueError("prescreen_check must be true or false.")
     scale_values = config.get("rating_scale", [])
     allowed_ratings: set[int] = set()
     for value in scale_values:
@@ -508,10 +515,14 @@ def run_mos_pipeline(
     main, main_mapping = _canonicalize(
         collected["main"], aliases, REQUIRED_MAIN_FIELDS, "main", issues
     )
+    # The prescreen CSV is always required so missing prescreen data is
+    # reported. Its native_english/headphones answers are only checked when
+    # prescreen_check is true.
     prescreen, prescreen_mapping = _canonicalize(
         collected["prescreen"],
         aliases,
-        ("participant_id", "session_id", "native_english", "headphones"),
+        ("participant_id", "session_id")
+        + (PRESCREEN_FIELDS if prescreen_check else ()),
         "prescreen",
         issues,
     )
@@ -633,6 +644,11 @@ def run_mos_pipeline(
             raise ValueError(f"Duplicate incomplete-session override for {key}.")
         incomplete_override_index[key] = override
 
+    active_eligibility_fields = (
+        ELIGIBILITY_FIELDS
+        if prescreen_check
+        else tuple(f for f in ELIGIBILITY_FIELDS if f not in PRESCREEN_FIELDS)
+    )
     eligibility_override_index: dict[tuple[str, str, str], dict[str, Any]] = {}
     for override in config.get("eligibility_field_overrides", []):
         participant_id = str(override.get("participant_id", "")).strip()
@@ -643,13 +659,13 @@ def run_mos_pipeline(
         if (
             not participant_id
             or not session_id
-            or field not in ELIGIBILITY_FIELDS
+            or field not in active_eligibility_fields
             or corrected_value is None
             or not reason
         ):
             raise ValueError(
                 "Each eligibility-field override requires participant_id, session_id, "
-                f"field in {ELIGIBILITY_FIELDS}, a Boolean corrected_value, and reason."
+                f"field in {active_eligibility_fields}, a Boolean corrected_value, and reason."
             )
         key = (participant_id, session_id, field)
         if key in eligibility_override_index:
@@ -732,15 +748,17 @@ def run_mos_pipeline(
         )
 
         blockers: list[str] = []
-        raw_eligibility = {
-            "native_english": _parse_bool(pre.get("native_english")) if pre else None,
-            "headphones": _parse_bool(pre.get("headphones")) if pre else None,
-            "heard_clearly": _parse_bool(snd.get("heard_clearly")) if snd else None,
-        }
+        raw_eligibility: dict[str, bool | None] = {}
+        if prescreen_check:
+            for field in PRESCREEN_FIELDS:
+                raw_eligibility[field] = _parse_bool(pre.get(field)) if pre else None
+        raw_eligibility["heard_clearly"] = (
+            _parse_bool(snd.get("heard_clearly")) if snd else None
+        )
         effective_eligibility = dict(raw_eligibility)
         eligibility_fields_applied: list[str] = []
         eligibility_reasons: list[str] = []
-        for field in ELIGIBILITY_FIELDS:
+        for field in active_eligibility_fields:
             eligibility_override = eligibility_override_index.get(
                 (participant_id, session_id, field)
             )
@@ -795,8 +813,6 @@ def run_mos_pipeline(
                     "reason": eligibility_override.get("reason", ""),
                 }
             )
-        native = effective_eligibility["native_english"]
-        headphones = effective_eligibility["headphones"]
         heard = effective_eligibility["heard_clearly"]
         if pre is None:
             blockers.append("missing prescreen row")
@@ -806,10 +822,10 @@ def run_mos_pipeline(
             blockers.append("missing sound-check row")
         elif str(snd.get("list_id", "")) != str(list_id):
             blockers.append("sound-check list does not match main data")
-        if native is not True:
-            blockers.append("native_english is not TRUE")
-        if headphones is not True:
-            blockers.append("headphones is not TRUE")
+        if prescreen_check:
+            for field in PRESCREEN_FIELDS:
+                if effective_eligibility[field] is not True:
+                    blockers.append(f"{field} is not TRUE")
         if heard is not True:
             blockers.append("heard_clearly is not TRUE")
         if (
@@ -934,15 +950,17 @@ def run_mos_pipeline(
                 participant_id,
                 session_id,
             )
+        prescreen_columns: dict[str, Any] = {"prescreen_present": pre is not None}
+        if prescreen_check:
+            for field in PRESCREEN_FIELDS:
+                prescreen_columns[f"{field}_raw"] = raw_eligibility[field]
+                prescreen_columns[field] = effective_eligibility[field]
         participant_qc.append(
             {
                 "list_id": list_id,
                 "participant_id": participant_id,
                 "session_id": session_id,
-                "native_english_raw": raw_eligibility["native_english"],
-                "native_english": native,
-                "headphones_raw": raw_eligibility["headphones"],
-                "headphones": headphones,
+                **prescreen_columns,
                 "heard_clearly_raw": raw_eligibility["heard_clearly"],
                 "heard_clearly": heard,
                 "eligibility_override_applied": bool(eligibility_fields_applied),
@@ -1465,6 +1483,7 @@ def run_mos_pipeline(
         "results_root": str(results_root.resolve()),
         "output_root": str(output_root.resolve()),
         "status": status,
+        "prescreen_check": prescreen_check,
         "qc_summary": summary,
         "eligible_participants": len(included_keys),
         "analysis_ready_rows": 0 if status == "BLOCKED" else len(eligible_rows),

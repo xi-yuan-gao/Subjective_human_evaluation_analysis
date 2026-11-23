@@ -113,7 +113,22 @@ def _validate_input(
     fieldnames: list[str],
     config: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    missing_fields = [field for field in REQUIRED_FIELDS if field not in fieldnames]
+    # identifier columns listed 
+    id_fields = ("list_id", "participant_id", "session_id", "speaker_id", "item_id", "condition")
+
+    # small helpers
+    def clean(value: Any) -> str:
+        """String with surrounding spaces removed, so '1737 ' == '1737'."""
+        return "" if value is None else str(value).strip()
+
+    def row_label(row: dict[str, Any], row_number: int) -> str:
+        """Show the source file in error messages when the loader provides it."""
+        source = row.get("source_file")
+        return f"{source}:{row_number}" if source else str(row_number)
+
+    # check if all columns are there. speaker_id etc. are required too
+    required = list(dict.fromkeys([*REQUIRED_FIELDS, *id_fields]))
+    missing_fields = [field for field in required if field not in fieldnames]
     if missing_fields:
         raise MOSAnalysisError(
             "Input is missing required columns: " + ", ".join(missing_fields)
@@ -126,49 +141,74 @@ def _validate_input(
     ]
     allowed_ratings = set(rating_scale)
     scored: list[dict[str, Any]] = []
-    invalid_rows: list[int] = []
-    blank_key_rows: list[int] = []
+    invalid_rows: list[str] = []
+    blank_key_rows: list[str] = []
+
+    # check each row
     for row_number, row in enumerate(rows, start=2):
-        if any(not str(row.get(field, "")).strip() for field in REQUIRED_FIELDS[:-1]):
-            blank_key_rows.append(row_number)
-        parsed = _parse_rating(row.get("mos_rating"), allowed_ratings)
+        # check the explicit identifier list
+        if any(not clean(row.get(field)) for field in id_fields):
+            blank_key_rows.append(row_label(row, row_number)) # if any IDs empty
+        parsed = _parse_rating(row.get("mos_rating"), allowed_ratings) # if rating valid
         if parsed is None:
-            invalid_rows.append(row_number)
+            invalid_rows.append(row_label(row, row_number))
             continue
         enriched: dict[str, Any] = dict(row)
         enriched["mos_rating"] = parsed
         scored.append(enriched)
+
     if blank_key_rows:
         raise MOSAnalysisError(
             "Required identifiers are blank on input rows: "
-            + ", ".join(str(value) for value in blank_key_rows[:20])
+            + ", ".join(blank_key_rows[:20])
         )
     if invalid_rows:
         raise MOSAnalysisError(
             "MOS ratings must be configured whole-number scale values. Invalid rows: "
-            + ", ".join(str(value) for value in invalid_rows[:20])
+            + ", ".join(invalid_rows[:20])
         )
 
-    response_keys = [
+    # check duplicates. one rating per listener per clip. Clip = speaker + item; condition removed.
+    response_keys = Counter(
         (
-            str(row["list_id"]),
-            str(row["participant_id"]),
-            str(row["session_id"]),
-            str(row["item_id"]),
-            str(row["condition"]),
+            clean(row["list_id"]),
+            clean(row["participant_id"]),
+            clean(row["session_id"]),
+            clean(row["speaker_id"]),
+            clean(row["item_id"]),
         )
         for row in scored
-    ]
-    duplicates = [key for key, count in Counter(response_keys).items() if count > 1]
+    )
+    duplicates = [key for key, count in response_keys.items() if count > 1]
     if duplicates:
         raise MOSAnalysisError(
-            f"Found {len(duplicates)} duplicate participant-item-condition response keys."
+            f"Found {len(duplicates)} duplicate responses "
+            f"(same list, participant, session, speaker and item). Examples: {duplicates[:3]}"
         )
 
+    # each participant did the test once, on one list
+    sessions_by_participant: dict[str, set[str]] = defaultdict(set)
+    lists_by_participant: dict[str, set[str]] = defaultdict(set)
+    for row in scored:
+        participant = clean(row["participant_id"])
+        sessions_by_participant[participant].add(clean(row["session_id"]))
+        lists_by_participant[participant].add(clean(row["list_id"]))
+    retakes = sorted(p for p, s in sessions_by_participant.items() if len(s) > 1)
+    if retakes:
+        raise MOSAnalysisError(
+            f"{len(retakes)} participant(s) have more than one session: {retakes[:5]}"
+        )
+    multi_list = sorted(p for p, l in lists_by_participant.items() if len(l) > 1)
+    if multi_list:
+        raise MOSAnalysisError(
+            f"{len(multi_list)} participant(s) appear in more than one list: {multi_list[:5]}"
+        )
+
+    # both models present, as configured
     expected_conditions = [
-        str(value) for value in config.get("expected_conditions", [])
+        clean(value) for value in config.get("expected_conditions", [])
     ]
-    observed_conditions = sorted({str(row["condition"]) for row in scored})
+    observed_conditions = sorted({clean(row["condition"]) for row in scored})
     if expected_conditions and set(observed_conditions) != set(expected_conditions):
         missing = sorted(set(expected_conditions) - set(observed_conditions))
         unexpected = sorted(set(observed_conditions) - set(expected_conditions))
@@ -181,42 +221,81 @@ def _validate_input(
             "Condition coverage differs from config (" + "; ".join(details) + ")."
         )
 
-    participant_keys = {
-        (str(row["participant_id"]), str(row["session_id"])) for row in scored
-    }
-    item_metadata: dict[str, set[tuple[str, str, str]]] = defaultdict(set)
+    # counterbalancing - every clip was rated in every model (across the lists)
+    conditions_by_clip: dict[tuple[str, str], set[str]] = defaultdict(set)
     for row in scored:
-        item_metadata[str(row["item_id"])].add(
+        clip = (clean(row["speaker_id"]), clean(row["item_id"]))
+        conditions_by_clip[clip].add(clean(row["condition"]))
+    unbalanced = sorted(
+        clip for clip, conds in conditions_by_clip.items() if conds != set(observed_conditions)
+    )
+    if unbalanced:
+        raise MOSAnalysisError(
+            f"{len(unbalanced)} clip(s) were not rated in every condition "
+            f"(counterbalancing broken). Examples: "
+            + ", ".join(f"{c}: {sorted(conditions_by_clip[c])}" for c in unbalanced[:3])
+        )
+
+    # metadata grouped by (speaker, item); detects the text column name;
+    # prints the conflicting values
+    text_field = next((f for f in ("reference_text", "text") if f in fieldnames), None)
+    gender_field = "gender" if "gender" in fieldnames else None
+    item_metadata: dict[tuple[str, str], set[tuple[str, str]]] = defaultdict(set)
+    for row in scored:
+        clip = (clean(row["speaker_id"]), clean(row["item_id"]))
+        item_metadata[clip].add(
             (
-                str(row.get("speaker_id", "")),
-                str(row.get("gender", "")),
-                str(row.get("reference_text", "")),
+                clean(row.get(gender_field)) if gender_field else "",
+                clean(row.get(text_field)) if text_field else "",
             )
         )
-    inconsistent_items = [
-        item for item, values in item_metadata.items() if len(values) > 1
-    ]
+    inconsistent_items = sorted(
+        clip for clip, values in item_metadata.items() if len(values) > 1
+    )
     if inconsistent_items:
         raise MOSAnalysisError(
-            f"Found {len(inconsistent_items)} item IDs with inconsistent speaker, gender, or reference metadata."
+            f"Found {len(inconsistent_items)} clips (speaker, item) with inconsistent "
+            f"gender or text metadata. Examples: "
+            + "; ".join(f"{c}: {item_metadata[c]}" for c in inconsistent_items[:3])
         )
 
-    expected_participants = (
-        len(config.get("list_ids", []))
-        * int(config.get("expected_participants_per_list", 0) or 0)
-    )
-    if expected_participants and len(participant_keys) != expected_participants:
+    # participants counted per list (not one total across lists)
+    participants_by_list: dict[str, set[str]] = defaultdict(set)
+    for row in scored:
+        participants_by_list[clean(row["list_id"])].add(clean(row["participant_id"]))
+    expected_per_list = int(config.get("expected_participants_per_list", 0) or 0)
+    if expected_per_list:
+        list_ids = [clean(v) for v in config.get("list_ids", [])] or sorted(participants_by_list)
+        wrong_lists = {
+            list_id: len(participants_by_list.get(list_id, set()))
+            for list_id in list_ids
+            if len(participants_by_list.get(list_id, set())) != expected_per_list
+        }
+        if wrong_lists:
+            raise MOSAnalysisError(
+                f"Expected {expected_per_list} participants per list; found {wrong_lists}."
+            )
+
+    rows_per_session = Counter((clean(row["participant_id"]), clean(row["session_id"])) for row in scored)
+    row_counts = Counter(rows_per_session.values())   # e.g. {48: 40} = 40 sessions with 48 rows
+    if len(row_counts) > 1:
         raise MOSAnalysisError(
-            f"Expected {expected_participants} participant sessions; found {len(participant_keys)}."
+            f"Sessions have different numbers of rows: {dict(row_counts)}. "
+            f"Shortest sessions: {sorted(rows_per_session.items(), key=lambda kv: kv[1])[:5]}"
         )
 
+    # report has more detail; "items" now counts real clips
     validation = {
         "input_rows": len(rows),
         "valid_score_rows": len(scored),
-        "participant_sessions": len(participant_keys),
+        "participants": len(sessions_by_participant),
+        "participant_sessions": len({(clean(row["participant_id"]), clean(row["session_id"])) for row in scored}),
+        "rows_per_session": dict(row_counts),
+        "participants_per_list": {k: len(v) for k, v in sorted(participants_by_list.items())},
         "items": len(item_metadata),
         "conditions": observed_conditions,
         "rating_scale": rating_scale,
+        "metadata_fields_checked": [f for f in (gender_field, text_field) if f],
         "missing_ratings_imputed": 0,
     }
     return scored, validation
