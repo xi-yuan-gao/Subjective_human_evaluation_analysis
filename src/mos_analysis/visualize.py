@@ -280,6 +280,13 @@ def _ordered_conditions(
     return ordered
 
 
+def _item_key(row: dict[str, Any]) -> str:
+    """Unique stimulus key: different speakers can share the same item_id (e.g. sentence number)."""
+    speaker = str(row.get("speaker_id", "")).strip()
+    item = str(row.get("item_id", "")).strip()
+    return f"{speaker}|{item}" if speaker else item
+
+
 def _condition_data(
     rows: list[dict[str, Any]],
     conditions: list[str],
@@ -291,9 +298,15 @@ def _condition_data(
         condition_order=conditions,
         confidence_level=confidence_level,
     )
+    items_by_condition: dict[str, set[str]] = defaultdict(set)
+    for row in rows:
+        items_by_condition[str(row.get("condition", ""))].add(_item_key(row))
     for row in output:
         condition = str(row["condition"])
         row["condition_display_name"] = display_names.get(condition, condition)
+        # Recount items by speaker + item_id; summarize_conditions counts item_id alone,
+        # which merges recordings of the same sentence by different speakers.
+        row["n_items"] = len(items_by_condition.get(condition, set()))
     return output
 
 
@@ -664,7 +677,8 @@ def _draw_rating_distribution(
         mean_line = f"Mean {_mos(float(summary['mean_mos']) if _finite(summary, 'mean_mos') else rating_mean)}"
         if _finite(summary, "mos_ci_low", "mos_ci_high"):
             mean_line += f" {_mos_ci(float(summary['mos_ci_low']), float(summary['mos_ci_high']))}"
-        mean_line += f" · median {median_rating}"
+        shown_median = _rating(summary["median_mos"]) if _finite(summary, "median_mos") else median_rating
+        mean_line += f" · median {shown_median}"
         high_share = sum(proportions.get(rating, 0.0) for rating in (4, 5))
         low_share = sum(proportions.get(rating, 0.0) for rating in (1, 2))
         body.append(_text(stats_x, y + 6, mean_line, size=12, weight=600))
