@@ -1,2 +1,0 @@
-condition,condition_display_name,reference_condition,reference_display_name,n_paired_listeners,mean_difference,sd_difference,difference_ci_low,difference_ci_high,n_listeners_higher,n_listeners_lower,n_listeners_tied,confidence_level,ci_method
-wd-0.2-mantis-chaos-latest,Mantis Chaos (latest),wd-0.2-blink-3,Blink 3,20,0.20833333333333334,0.34065425527567816,0.04890223425606757,0.3677644324105991,12,8,0,0.95,paired_listener_mean_student_t

@@ -1,5 +1,0 @@
-list_id,condition,trial_count,present
-1,wd-0.2-blink-3,30,True
-1,wd-0.2-mantis-chaos-latest,30,True
-2,wd-0.2-blink-3,0,False
-2,wd-0.2-mantis-chaos-latest,0,False

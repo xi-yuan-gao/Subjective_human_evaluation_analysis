@@ -1,1 +1,0 @@
-QC BLOCKED: 2/6 required participant slots are filled; list 1 needs 1 eligible participant and list 2 needs 3 eligible participants; 4 participants were excluded (4 for failed at least one attention check); 60/60 utterance-condition pairs are incomplete; other blockers: 2 MISSING_LIST_CONDITION; analysis stopped before scoring.

@@ -1,7 +1,0 @@
-list_id,participant_id,session_id,native_english,headphones,heard_clearly,main_rows,scored_trial_rows,attention_check_rows,attention_checks_passed,attention_override_applied,attention_override_reason,attention_override_reviewed_at,postquestionnaire_present,include,exclusion_reasons,technical_exclusions_applied
-1,5d352f8bb02857001963539a,b3962a95-d815-4441-a8f5-d9d21ad7c1d9,True,True,True,34,30,4,True,False,,,True,True,,0
-2,6061711f6ef8e3b652861dbf,1e075dbe-6005-4076-8aab-a890bb14f03f,True,True,True,34,30,4,False,True,Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit.,2026-11-06,True,True,,0
-1,69f0e10237e70629b1851b6f,35b6e9e7-d6df-44aa-8b43-c4421a465d0b,True,True,True,34,30,4,True,False,,,True,True,,0
-2,6a673efb4aca23d455ca3ba2,6558c462-fdf5-4b34-a9b9-8e733fd1bff9,True,True,True,34,30,4,False,True,Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit.,2026-11-06,True,True,,0
-2,6ae9dfa1d43da38c1c972a67,037313ce-3bbc-4b23-997e-11fa6bc39c88,True,True,True,34,30,4,False,True,Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit.,2026-11-06,True,True,,0
-1,6aea49403913f5174c24e4a5,1b98708c-b2e4-4a79-aeae-a63e16842000,True,True,True,34,30,4,False,True,Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit.,2026-11-06,True,True,,0

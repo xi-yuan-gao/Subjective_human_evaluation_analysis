@@ -1,9 +1,0 @@
-Frequentist cumulative-link mixed-effects MOS analysis
-
-Model: MOS rating ~ condition + speaker + (1|listener) + (1|listener:condition) + (1|item); logit link and flexible thresholds.
-Overall condition effect: likelihood-ratio chi-square(1) = 4.525, p = 0.0334095.
-Model diagnostic status: REVIEW (convergence code 0; maximum absolute gradient 0.00225367).
-
-wd-0.2-blink-3 versus wd-0.2-mantis-chaos-latest: cumulative odds ratio = 0.716 (95% CI 0.536 to 0.958), z = -2.253, p = 0.0242553.
-
-Positive log-odds differences and odds ratios above 1 favor the reference condition.

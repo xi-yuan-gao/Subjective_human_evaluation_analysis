@@ -1,7 +1,0 @@
-severity,code,list_id,participant_id,session_id,message
-WARNING,ATTENTION_FAILURE_OVERRIDDEN,2,6061711f6ef8e3b652861dbf,1e075dbe-6005-4076-8aab-a890bb14f03f,Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit.
-WARNING,ATTENTION_FAILURE_OVERRIDDEN,2,6a673efb4aca23d455ca3ba2,6558c462-fdf5-4b34-a9b9-8e733fd1bff9,Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit.
-WARNING,ATTENTION_FAILURE_OVERRIDDEN,2,6ae9dfa1d43da38c1c972a67,037313ce-3bbc-4b23-997e-11fa6bc39c88,Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit.
-WARNING,ATTENTION_FAILURE_OVERRIDDEN,1,6aea49403913f5174c24e4a5,1b98708c-b2e4-4a79-aeae-a63e16842000,Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit.
-WARNING,SESSION_TIMING_REVIEW,2,6a673efb4aca23d455ca3ba2,6558c462-fdf5-4b34-a9b9-8e733fd1bff9,relative_session_duration_outlier
-WARNING,SESSION_TIMING_REVIEW,2,6ae9dfa1d43da38c1c972a67,037313ce-3bbc-4b23-997e-11fa6bc39c88,nonmonotonic_study_elapsed_sec
