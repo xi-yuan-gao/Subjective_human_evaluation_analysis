@@ -95,7 +95,11 @@
     "word_map": {
       "theatre": "theater",
       "neighbours": "neighbors",
-      "spelt": "spelled"
+      "spelt": "spelled",
+      "ill": "i will",
+      "youll": "you will",
+      "havent": "have not",
+      "arent": "are not"
     },
     "excluded_name_phrases": [
       "stasey",

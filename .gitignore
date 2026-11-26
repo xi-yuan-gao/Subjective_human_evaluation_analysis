@@ -1,7 +1,5 @@
 /results/
 /analysis_output/
-/mos_analysis_output*/
-/mos_clmm_results*/
 .DS_Store
 /.venv/
 __pycache__/

@@ -210,7 +210,12 @@ def summarize_mos(
                         for row in group
                     }
                 ),
-                "n_items": len({str(row.get("item_id", "")) for row in group}),
+                "n_items": len({
+                                (
+                                str(row.get("speaker_id", "")).strip(),
+                                str(row.get("item_id", "")).strip(),
+                    )
+                    for row in group}),
                 "n_speakers": len(
                     {str(row.get("speaker_id", "")) for row in group}
                 ),

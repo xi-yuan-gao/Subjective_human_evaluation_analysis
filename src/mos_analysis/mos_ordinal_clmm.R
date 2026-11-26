@@ -3,11 +3,11 @@
 # Frequentist cumulative-link mixed model for the cleaned MOS dataset.
 #
 # Primary model:
-#   mos_rating ~ condition + speaker_id + (1 | listener_id) + (1 | item_id)
+#   mos_rating ~ condition + speaker_id + (1 | listener_id) +
+#                (1 | listener_condition) + (1 | item_id)
 #
-# Outputs an overall likelihood-ratio test for condition and focused Wald
-# z-tests comparing the configured reference condition with every other
-# condition. Pairwise p-values are corrected together using Holm's method.
+# Outputs an overall likelihood-ratio test for condition and Wald z-tests
+# comparing the configured reference condition with the other condition.
 
 parse_arguments <- function(arguments) {
   values <- list()
@@ -114,6 +114,9 @@ if (!reference_condition %in% levels(data$condition)) {
   )
 }
 data$condition <- stats::relevel(data$condition, ref = reference_condition)
+data$listener_condition <- interaction(
+  data$listener_id, data$condition, drop = TRUE, sep = "::"
+)
 
 captured_warnings <- character()
 capture_fit_warnings <- function(expression) {
@@ -130,7 +133,7 @@ control <- ordinal::clmm.control(maxIter = 200, gradTol = 1e-5)
 full_model <- capture_fit_warnings(
   ordinal::clmm(
     mos_rating_ordered ~ condition + speaker_id +
-      (1 | listener_id) + (1 | item_id),
+      (1 | listener_id) + (1 | listener_condition) + (1 | item_id),
     data = data,
     link = "logit",
     threshold = "flexible",
@@ -142,7 +145,7 @@ full_model <- capture_fit_warnings(
 reduced_model <- capture_fit_warnings(
   ordinal::clmm(
     mos_rating_ordered ~ speaker_id +
-      (1 | listener_id) + (1 | item_id),
+      (1 | listener_id) + (1 | listener_condition) + (1 | item_id),
     data = data,
     link = "logit",
     threshold = "flexible",
@@ -170,8 +173,8 @@ if (any(is.na(c(lrt_column, df_column, p_column)))) {
 }
 overall_test <- data.frame(
   test = "Likelihood-ratio test of the overall condition effect",
-  full_model = "condition + speaker + crossed listener/item random intercepts",
-  reduced_model = "speaker + crossed listener/item random intercepts",
+  full_model = "condition + speaker + random intercepts for listener, listener x condition, item",
+  reduced_model = "speaker + random intercepts for listener, listener x condition, item",
   chi_square = as.numeric(lrt_table[[lrt_column]][lrt_row]),
   degrees_of_freedom = as.numeric(lrt_table[[df_column]][lrt_row]),
   p_value = as.numeric(lrt_table[[p_column]][lrt_row]),
@@ -204,9 +207,6 @@ focused_contrasts <- emmeans::contrast(
 raw_tests <- as.data.frame(
   summary(focused_contrasts, infer = c(TRUE, TRUE), level = 0.95, adjust = "none")
 )
-holm_tests <- as.data.frame(
-  summary(focused_contrasts, infer = c(TRUE, TRUE), level = 0.95, adjust = "holm")
-)
 
 lower_column <- find_column(raw_tests, c("asymp.LCL", "lower.CL"))
 upper_column <- find_column(raw_tests, c("asymp.UCL", "upper.CL"))
@@ -227,8 +227,7 @@ pairwise_tests <- data.frame(
   cumulative_odds_ratio = exp(raw_tests$estimate),
   odds_ratio_ci_95_lower = exp(raw_tests[[lower_column]]),
   odds_ratio_ci_95_upper = exp(raw_tests[[upper_column]]),
-  p_value_raw = raw_tests$p.value,
-  p_value_holm = holm_tests$p.value,
+  p_value = raw_tests$p.value,
   test = "Wald z-test on the cumulative-logit scale",
   stringsAsFactors = FALSE
 )
@@ -305,7 +304,7 @@ summary_lines <- c(
   "Frequentist cumulative-link mixed-effects MOS analysis",
   "",
   paste0(
-    "Model: MOS rating ~ condition + speaker + (1|listener) + (1|item); ",
+    "Model: MOS rating ~ condition + speaker + (1|listener) + (1|listener:condition) + (1|item); ",
     "logit link and flexible thresholds."
   ),
   sprintf(
@@ -323,14 +322,14 @@ summary_lines <- c(
   "",
   apply(pairwise_tests, 1, function(row) {
     sprintf(
-      "%s versus %s: cumulative odds ratio = %.3f (95%% CI %.3f to %.3f), z = %.3f, Holm-adjusted p = %.6g.",
+      "%s versus %s: cumulative odds ratio = %.3f (95%% CI %.3f to %.3f), z = %.3f, p = %.6g.",
       row[["reference_condition"]],
       row[["comparison_condition"]],
       as.numeric(row[["cumulative_odds_ratio"]]),
       as.numeric(row[["odds_ratio_ci_95_lower"]]),
       as.numeric(row[["odds_ratio_ci_95_upper"]]),
       as.numeric(row[["z_statistic"]]),
-      as.numeric(row[["p_value_holm"]])
+      as.numeric(row[["p_value"]])
     )
   }),
   "",

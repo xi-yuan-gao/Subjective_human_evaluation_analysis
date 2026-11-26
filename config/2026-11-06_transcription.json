@@ -1,16 +1,13 @@
 {
-  "list_directory_pattern": "pilot_transcription_experiment_list{list_id}",
-  "list_ids": [1, 2, 3, 4, 5],
+  "list_directory_pattern": "2026-11-06_transcription_experiment_list{list_id}",
+  "list_ids": [1, 2],
   "expected_participants_per_list": 3,
   "expected_ratings_per_utterance_condition": 3,
-  "expected_main_trials_per_participant": null,
-  "expected_attention_checks_per_participant": null,
+  "expected_main_trials_per_participant": 30,
+  "expected_attention_checks_per_participant": 4,
   "expected_conditions": [
-    "mantis_3.2",
-    "mantis_5.2_content_apt",
-    "mantis_v5_w2s_baseline_E2E_apt",
-    "spoken_audio",
-    "whisper_audio"
+    "wd-0.2-blink-3",
+    "wd-0.2-mantis-chaos-latest"
   ],
   "column_aliases": {
     "participant_id": ["participant_id", "participant", "prolific_pid", "prolific_id"],
@@ -44,40 +41,36 @@
   "attention_trial_values": ["attention", "attention_check", "check"],
   "attention_check_include_overrides": [
     {
-      "list_id": "3",
-      "participant_id": "63f93b47bb0c1a1aca131480",
-      "session_id": "a1780264-721e-4d73-b3a7-cfc4a0893277",
-      "reviewed_at": "2026-10-16",
-      "reason": "Manual review approved inclusion: the participant entered XXX on three attention checks but completed the regular transcription task; retain the failed checks for audit and report a sensitivity analysis without this override."
-    },
-    {
-      "list_id": "4",
-      "participant_id": "5efe6daf6a2551378201893e",
-      "session_id": "b49a92f9-edfd-482a-aead-1d384b5a5afc",
-      "reviewed_at": "2026-10-16",
-      "reason": "Manual review approved inclusion: the participant entered beep variants on three attention checks but completed the regular transcription task; retain the failed checks for audit and report a sensitivity analysis without this override."
-    }
+    "list_id": "2",
+    "participant_id": "6061711f6ef8e3b652861dbf",
+    "session_id": "1e075dbe-6005-4076-8aab-a890bb14f03f",
+    "reviewed_at": "2026-11-06",
+    "reason": "Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit."
+  },
+  {
+    "list_id": "2",
+    "participant_id": "6a673efb4aca23d455ca3ba2",
+    "session_id": "6558c462-fdf5-4b34-a9b9-8e733fd1bff9",
+    "reviewed_at": "2026-11-06",
+    "reason": "Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit."
+  },
+  {
+    "list_id": "2",
+    "participant_id": "6ae9dfa1d43da38c1c972a67",
+    "session_id": "037313ce-3bbc-4b23-997e-11fa6bc39c88",
+    "reviewed_at": "2026-11-06",
+    "reason": "Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit."
+  },
+  {
+    "list_id": "1",
+    "participant_id": "6aea49403913f5174c24e4a5",
+    "session_id": "1b98708c-b2e4-4a79-aeae-a63e16842000",
+    "reviewed_at": "2026-11-06",
+    "reason": "Manual inclusion approved: participant acknowledged the attention check and was confirmed eligible. Preserve failed checks for audit."
+  }
+
   ],
-  "technical_exclusion_overrides": [
-    {
-      "list_id": "1",
-      "participant_id": "628781515f29a0394e23b15b",
-      "session_id": "7d9fcf4d-eff5-4920-8f9c-8736fea2a2f0",
-      "utterance_id": "60116_550_14-20201223-193908",
-      "condition": "mantis_v5_w2s_baseline_E2E_apt",
-      "reviewed_at": "2026-10-16",
-      "reason": "Participant reported in the postquestionnaire that audio immediately before the PINEAPPLE check did not play and that they entered '-'; this is one of the two matching responses."
-    },
-    {
-      "list_id": "1",
-      "participant_id": "628781515f29a0394e23b15b",
-      "session_id": "7d9fcf4d-eff5-4920-8f9c-8736fea2a2f0",
-      "utterance_id": "60321_550_28-20201223-204509",
-      "condition": "spoken_audio",
-      "reviewed_at": "2026-10-16",
-      "reason": "Participant reported in the postquestionnaire that audio immediately before the PINEAPPLE check did not play and that they entered '-'; this is one of the two matching responses."
-    }
-  ],
+  "technical_exclusion_overrides": [],
   "timing_qc": {
     "minimum_session_duration_sec": null,
     "maximum_session_duration_sec": null,
@@ -121,18 +114,12 @@
     "bootstrap_samples": 5000,
     "random_seed": 20261016,
     "condition_order": [
-      "mantis_3.2",
-      "mantis_5.2_content_apt",
-      "mantis_v5_w2s_baseline_E2E_apt",
-      "spoken_audio",
-      "whisper_audio"
+      "wd-0.2-blink-3",
+      "wd-0.2-mantis-chaos-latest"
     ],
     "condition_display_names": {
-    "mantis_3.2": "Mantis 3.2",
-    "mantis_5.2_content_apt": "Mantis 5.2 content apt",
-    "mantis_v5_w2s_baseline_E2E_apt": "Mantis e2e apt",
-    "spoken_audio": "Spoken",
-    "whisper_audio": "Whisper"
+    "wd-0.2-blink-3": "Blink 3",
+    "wd-0.2-mantis-chaos-latest": "Mantis Chaos (latest)"
   },
     "gender_order": ["F", "M"],
     "gender_display_names": {

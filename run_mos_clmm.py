@@ -52,7 +52,7 @@ def build_command(
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     repository_root = Path(__file__).resolve().parent
-    analysis_script = repository_root / "scripts" / "mos_ordinal_clmm.R"
+    analysis_script = repository_root / "src" / "mos_analysis" /"mos_ordinal_clmm.R"
     rscript = shutil.which("Rscript")
 
     if rscript is None:

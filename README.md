@@ -4,31 +4,26 @@ This repository provides reusable, auditable pipelines for preparing and analyzi
 
 Transcription intelligibility experiments: quality control, text normalization, WER/CER scoring, summaries, figures, and optional mixed-effects analysis.
 
-Mean Opinion Score (MOS) experiments: quality control, preparation of a
-long-format analysis dataset, conventional MOS summaries, confidence
-intervals, figures, and separate ordinal mixed-effects analysis in R.
+Mean Opinion Score (MOS) experiments: quality control, preparation of a long-format analysis dataset, conventional MOS summaries, confidence intervals, figures, and separate ordinal mixed-effects analysis in R.
 
 Both workflows preserve the original CSV files, record the source of every loaded row, and stop before producing analysis-ready results when structural QC fails. Experiment-specific assumptions, column aliases, expected counts, exclusions, and thresholds are stored in JSON configuration files.
 
 The current transcription experiment is configured for:
 
-- 5 counterbalanced lists;
-- 3 eligible participants per list;
-- 5 audio conditions;
-- 3 independent transcriptions for every `utterance_id × condition` pair; and
+- n counterbalanced lists;
+- n eligible participants per list;
+- n audio conditions;and
 - hard eligibility requirements: `native_english=TRUE`, `headphones=TRUE`, and `heard_clearly=TRUE`.
 
 The reusable template is `config/transcription_config.json`. The completed
 pilot configuration is retained under `examples/configs/` as an audit record.
 
 The current MOS experiment is configured for:
-- 4 counterbalanced lists;
-- 10 eligible participants per list;
-- 4 audio conditions;
-- 10 independent ratings for every utterance_id × condition pair; and
-- hard eligibility requirements: native_english=TRUE, headphones=TRUE, and heard_clearly=TRUE.
-The reusable template is `config/mos_config.json`. The completed pilot
-configuration is retained under `examples/configs/` as an audit record.
+- n counterbalanced lists;
+- n eligible participants per list;
+- n audio conditions; and
+- hard eligibility requirements: heard_clearly=TRUE. (native_english=TRUE, headphones=TRUE) are tested in evaluation interface.
+The reusable template is `config/mos_config.json`. The completed pilot configuration is retained under `examples/configs/` as an audit record.
 
 
 ## Repository description
@@ -223,15 +218,21 @@ CER removes spaces by default. Set `normalization.cer_remove_spaces` to `false` 
 
 #### Mixed-effects condition analysis
 
-A post-hoc analysis fits linear mixed-effects models for WER and CER:
+A post-hoc analysis compares WER and CER between two conditions with negative binomial generalized linear mixed models (R package `glmmTMB`, called from Python). Error counts are modeled with the reference length as an offset, so the model describes error rates:
 
 ```text
-WER or CER ~ condition + speaker + (1 | listener) + (1 | utterance)
+word_errors ~ model + offset(log(reference_words)) + (1 + model | utterance) + (1 | listener)
 ```
 
-Condition and speaker are fixed effects. Listener and utterance are crossed random intercepts, accounting for repeated measurements from the same listener and repeated use of the same utterance. The overall condition result is a joint Wald chi-square test of all condition coefficients; significance means at least one condition differs.
+CER uses `character_errors` and `reference_characters` in the same way. WER is the primary outcome, CER secondary.
 
-A selected comparison tests one condition against another within the same fitted model. It reports `FIRST − SECOND`, its standard error, 95% confidence interval, Wald z statistic, and two-sided p-value. A negative difference means the first condition has the lower error rate. No multiplicity correction is applied because one comparison is selected per run; choose that pair before inspecting its p-value.
+- **Fixed effect:** model condition, coded +0.5 (first condition) and −0.5 (second condition).
+- **Random effects:** listener intercepts, for repeated transcriptions by the same listener; utterance intercepts and condition slopes, so that utterances can differ in difficulty and in how much the condition affects them. If this model is singular or does not converge, the correlation is dropped, then the slope. Speaker is not a separate term: utterances are nested in speakers.
+- **Effect:** rate ratio `FIRST / SECOND` with a 95% Wald confidence interval. A ratio below 1 means the first condition has fewer errors; if the interval includes 1, there is no reliable difference.
+- **Test:** likelihood ratio test (1 df), comparing the model with and without the condition term.
+- **Checks:** simulation-based distribution checks (zeros, variance, maximum count). Sensitivity analyses: a Poisson model, a model with utterance intercepts only, and a paired Wilcoxon signed-rank test across utterances.
+
+The analysis supports exactly two conditions, taken from `expected_conditions` in the configuration. `--compare-conditions FIRST SECOND` sets the direction of the ratio only. Requires R with the `glmmTMB` package (`Rscript` on PATH, or set `TRANSCRIPTION_RSCRIPT`). See `output_guide.md` for how to read the outputs.
 
 #### Personal-name exclusion
 
@@ -336,15 +337,22 @@ analysis_output/
 │   ├── xxx_rates.svg
 │   └── inter_listener_consistency.svg
 └── 07_mixed_effects/                  # Optional; generated separately
-    ├── condition_effect_tests.csv
-    ├── selected_condition_comparison.csv  # Only with --compare-conditions
-    ├── condition_effect_summary.txt
-    └── model_audit.json
+    ├── condition_effect_summary.txt   # Plain-text summary of all results
+    ├── condition_effect_tests.csv     # Main results: rate ratios, CIs, LRT (WER, CER)
+    ├── sensitivity_analyses.csv       # Poisson, intercept-only and Wilcoxon checks
+    ├── model_selection_attempts.csv   # Random-effects structures tried and accepted
+    ├── random_effects.csv             # Random-effect SDs and correlations
+    ├── distribution_diagnostics.csv   # Simulation-based model checks
+    ├── descriptive_corpus_rates.csv   # Observed WER/CER per condition
+    ├── descriptive_by_listener.csv
+    ├── descriptive_by_speaker.csv
+    ├── model_audit.json               # Inputs, versions, design checks, all estimates
+    └── r_work/   
 ```
 
 `transcription_scores.csv` is the response-level analytical source of truth. `by_condition.csv` is the primary descriptive system comparison. `technical_exclusion_sensitivity.csv` is created only when approved technical exclusions are applied, and `by_gender_condition.csv` is created only when gender metadata are available.
 
-For mixed effects, `condition_effect_tests.csv` contains the omnibus WER/CER tests, `selected_condition_comparison.csv` contains the optional chosen pair, `condition_effect_summary.txt` gives the plain-language conclusions, and `model_audit.json` records the model specification, convergence, diagnostics, selected pair, and input hashes.
+For mixed effects, `condition_effect_tests.csv` contains the main WER and CER results (rate ratios with 95% CIs and likelihood ratio tests), `condition_effect_summary.txt` gives the plain-language conclusions, and `sensitivity_analyses.csv` and `distribution_diagnostics.csv` show whether the conclusions hold under alternative models and whether the model fits the data. `random_effects.csv` describes how much listeners and utterances vary, and `model_audit.json` records the model specification, condition coding, design checks, software versions and input hashes. See `output_guide.md` for how to read each file.
 
 ### MOS preprocessing and analysis
 The MOS and transcription pipelines use similar eligibility, identity, attention-check, timing, exclusion, and structural-QC rules. The main differences concern the outcome being prepared.
@@ -367,8 +375,8 @@ The MOS data pass through the following stages:
 Participant eligibility requires:
 
 - matching `participant_id` and `session_id` across the available sources;
-- `native_english=TRUE`;
-- `headphones=TRUE`;
+- `native_english=TRUE`; (not here, moved to interface check)
+- `headphones=TRUE`; (not here, moved to interface check)
 - `heard_clearly=TRUE`;
 - the configured number of experimental and attention-check trials; and
 - all attention checks passing, unless a documented manual override has been configured.
@@ -436,22 +444,7 @@ mos_analysis_output/
 ├── 03_summaries/
 └── 04_figures/
 ```
-| File | Purpose |
-| --- | --- |
-| `run_manifest.json` | Records input and output paths, final QC status, row counts, applied overrides and exclusions, and resolved source columns. |
-| `OUTPUT_GUIDE.md` | Provides a short guide to the generated output directory. |
-| `qc_summary.txt` | Gives the plain-language QC verdict and identifies the main blockers or exclusions. |
-| `qc_issues.csv` | Lists every QC error and warning with its code and explanation. |
-| `source_file_inventory.csv` | Lists the discovered source files, row counts, and available columns. |
-| `participant_qc.csv` | Records whether each participant was included and explains every exclusion. |
-| `rating_value_audit.csv` | Shows whether each submitted MOS value is a valid integer from 1 to 5. |
-| `attention_check_audit.csv` | Records expected and submitted attention-check ratings, pass/fail decisions, and overrides. |
-| `duplicate_ratings.csv` | Lists repeated participant/session/item/speaker/condition ratings. |
-| `technical_exclusion_audit.csv` | Records configured technical exclusions, match counts, reasons, and whether they were applied. |
-| `session_timing_qc.csv` | Reports session duration, trial timing, and timing warnings for manual review. |
-| `list_condition_coverage.csv` | Shows whether every configured list contains all expected conditions. |
-| `stimulus_condition_coverage.csv` | Reports the number of independent ratings for every item/speaker/condition combination. |
-| `item_metadata_audit.csv` | Identifies inconsistent item-level metadata such as conflicting reference text. |
+
 
 #### Analysis-ready file
 
@@ -489,14 +482,49 @@ source_row
 
 This file is the input for the ordinal mixed-effects analysis in R. It should not be created manually when QC is blocked.
 
+The CLMM is run separately (run_mos_clmm.py --output-root ...), and he output looks like:
+```text
+mos_clmm_output/                       # Optional; run_mos_clmm.py --output-root
+├── clmm_summary.txt                   # Plain-text summary of the results
+├── condition_overall_lrt.csv          # Likelihood ratio test of the condition effect
+├── e2e_pairwise_wald_tests.csv        # Odds ratios with 95% CIs vs the reference condition
+├── model_diagnostics.csv              # Convergence, gradient, sample sizes, status
+├── clmm_coefficients.csv              # All fixed-effect and threshold estimates
+├── model_audit.txt                    # Full and reduced models, random effects, R session
+└── model_warnings.txt                 # R warnings during fitting (empty = none)
+```
+
 ## Instructions for using the repository
 
 ### Requirements
 
 - Python 3.9 or newer;
 - no third-party packages for the transcription or MOS descriptive pipelines;
-- optional mixed-effects dependencies installed separately; and
 - a new or empty output directory for each run.
+
+Optional mixed-effects analyses need additional dependencies:
+
+| Analysis | Python packages | R and R packages |
+|---|---|---|
+| Transcription WER/CER (negative binomial GLMM) | `numpy`, `pandas`, `scipy` | R with `glmmTMB` |
+| MOS (cumulative link mixed model) | none | R with `ordinal` and `emmeans` |
+
+Install the Python packages with the optional extra:
+
+```bash
+python -m pip install -e '.[mixed-effects]'
+```
+
+Install the R packages once (command-line R; RStudio is optional):
+
+```bash
+Rscript -e "install.packages(c('glmmTMB', 'ordinal', 'emmeans'), repos = 'https://cloud.r-project.org')"
+```
+
+With conda, use `conda install -c conda-forge r-glmmtmb r-ordinal r-emmeans` instead.
+
+`Rscript` must be on PATH. For the transcription analysis, its location can
+alternatively be set with the environment variable `TRANSCRIPTION_RSCRIPT`.
 
 ### Expected input folders
 
@@ -570,23 +598,6 @@ be used as generic starting points.
 
 Use `null` only when a design requirement is not yet known. For the final analysis, use explicit expected counts so missing data become visible during QC.
 
-### Test the code
-
-Tests run separately from the real analysis and use temporary synthetic data. They do not read or modify `results/` or an existing analysis-output directory.
-
-Run all tests:
-
-```bash
-PYTHONPATH=src python3 -m unittest discover -s tests -v
-```
-
-Run only the MOS tests:
-
-```bash
-PYTHONPATH=src python3 -m unittest tests.test_mos_pipeline -v
-```
-
-Passing tests confirms that the implemented rules work on controlled examples. It does not replace reviewing the QC and prepared rows from the real experiment.
 
 ### Run the transcription analysis
 
@@ -615,15 +626,9 @@ when ordinal mixed-effects inference is required.
 
 ### Run the transcription mixed-effects analysis
 
-Run this after the transcription pipeline has created `03_scores/transcription_scores.csv`.
-
-Install the optional dependencies once:
-
-```bash
-python3 -m pip install -e '.[mixed-effects]'
-```
-
-For the overall condition effect:
+Run this after the transcription pipeline has created
+`03_scores/transcription_scores.csv`. The analysis compares exactly two
+conditions, taken from `expected_conditions` in the configuration.
 
 ```bash
 python3 run_transcription_mixed_effects.py \
@@ -632,14 +637,10 @@ python3 run_transcription_mixed_effects.py \
   --config ./config/transcription_config.json
 ```
 
-To compare one selected condition pair:
-
-```bash
-python3 run_transcription_mixed_effects.py \
-  --scores ./analysis_output/03_scores/transcription_scores.csv \
-  --output-root ./analysis_output/07_mixed_effects_conditionA_vs_conditionB \
-  --config ./config/transcription_config.json \
-  --compare-conditions condition_A condition_B
+Rate ratios are reported as first condition / second condition, in the order
+of the configuration. To reverse the direction, add
+`--compare-conditions condition_A condition_B`; this changes only the
+direction of the ratio, not the analysis.
 ```
 
 ### Run the MOS ordinal mixed-effects analysis
@@ -651,8 +652,14 @@ Run this after the MOS pipeline has created
 python3 run_mos_clmm.py \
   --input ./mos_analysis_output/02_preprocessed/mos_analysis_ready.csv \
   --output-root ./mos_clmm_output \
-  --reference-condition mantis_v5_w2s_baseline_E2E_apt
+  --reference-condition condition_ref
 ```
+
+Always set `--reference-condition` explicitly; the name must match a
+`condition` value in the input exactly. Odds ratios compare the reference with
+each other condition; values above 1 favor the reference. With three or more
+conditions, the pairwise p-values are not corrected for multiple comparisons;
+apply a correction (for example Holm) before reporting them.
 
 This command remains separate so the CLMM can be rerun without repeating QC,
 descriptive summaries, or figures.
@@ -758,12 +765,22 @@ Review transcription outputs in this order:
 7. questionnaire outputs; and
 8. figures together with their plot-data CSVs.
 
-If mixed-effects analysis was run, review:
+If the mixed-effects analysis was run, review `07_mixed_effects/` in this order:
 
-1. `condition_effect_summary.txt`;
-2. `condition_effect_tests.csv`;
-3. the optional `selected_condition_comparison.csv`; and
-4. `model_audit.json`.
+1. `condition_effect_summary.txt`: overview of all results;
+2. `model_selection_attempts.csv` and `distribution_diagnostics.csv`: check that
+   the model fitted and describes the data before reading the results;
+3. `condition_effect_tests.csv`: the main results (rate ratios, 95% CIs,
+   likelihood ratio tests);
+4. `random_effects.csv`: how much listeners and utterances vary;
+5. `sensitivity_analyses.csv`: whether the conclusion holds under alternative
+   models;
+6. `descriptive_by_speaker.csv` and `descriptive_by_listener.csv`: exploration
+   only; and
+7. `model_audit.json`: model specification, design checks, versions and input
+   hashes.
+
+See `output_guide.md` for how to read each file.
 
 #### MOS analysis
 
@@ -774,12 +791,25 @@ Review MOS outputs in this order:
 3. `rating_value_audit.csv`;
 4. `attention_check_audit.csv`;
 5. duplicate, exclusion, timing, and coverage audits;
-6. `run_manifest.json → resolved_columns`; and
+6. `run_manifest.json → resolved_columns`;
 7. `02_preprocessed/mos_analysis_ready.csv`;
 8. `03_summaries/mos_by_condition.csv` and supporting summaries; and
 9. the report-ready figures and plot data in `04_figures/`.
 
-For selected rows in `mos_analysis_ready.csv`, use `source_file` and `source_row` to verify the prepared value against the original CSV.
+For selected rows in `mos_analysis_ready.csv`, use `source_file` and
+`source_row` to verify the prepared value against the original CSV.
 
-`mos_analysis_ready.csv` is then used by the separate `run_mos_clmm.py`
-command for ordinal mixed-effects analysis.
+`mos_analysis_ready.csv` is the input for the separate `run_mos_clmm.py`
+command, which requires the columns `participant_id`, `session_id`, `item_id`,
+`condition`, `speaker_id` and `mos_rating`. If the ordinal mixed-effects
+analysis was run, review its output folder in this order:
+
+1. `clmm_summary.txt`: overview of the results;
+2. `model_diagnostics.csv` and `model_warnings.txt`: check convergence and
+   warnings;
+3. `condition_overall_lrt.csv`: likelihood ratio test of the condition effect;
+4. `e2e_pairwise_wald_tests.csv`: odds ratios with 95% CIs against the
+   reference condition; and
+5. `model_audit.txt`: random effects, full and reduced models, and R session.
+
+See `mos_output_guide.md` for how to read each file.
